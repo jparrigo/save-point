@@ -6,11 +6,16 @@ import {
   RouterProvider
 } from "react-router"
 import Login from './app/public/Login'
+import Register from './app/public/Register'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />
+  },
+  {
+    path: "/register",
+    element: <Register />
   }
 ])
 
