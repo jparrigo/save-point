@@ -5,8 +5,7 @@ export default function Register() {
     return (
       <div className='h-screen flex flex-col items-center justify-center bg-[url(./background.jpg)] bg-cover text-[#D9D9D9]'>
         <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
-          <h1 className="text-5xl">Save Point</h1>
-          <p className="text-[#646464]">Your Backlog finds its Home</p>
+          <h1 className="text-5xl">Sign Up</h1>
         </div>
         <section className="w-90 flex flex-col gap-4">
           <Input title="Username*" placeholder="Enter your username"/>
