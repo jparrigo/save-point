@@ -18,6 +18,7 @@ export default function Login() {
           <Button text='Sign In' variant='default' onPress={() => navigate("/home")}/>
           <Button text='Sign in with Google' variant='google'/>
         </div>
+        <p className="text-sm text-[#656565] text-center">Forgot your password? <a href="/forgotpsw" className="text-white">Click here</a></p>
         <p className="text-sm text-[#656565] text-center">Dont't have an account? <a href="/register" className="text-white">Sign up</a></p>
       </section>
     </div>

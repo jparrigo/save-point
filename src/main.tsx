@@ -8,6 +8,9 @@ import {
 import Login from './app/public/Login'
 import Register from './app/public/Register'
 import Home from './app/private/home'
+import ForgotPsw from './app/public/ForgotPsw'
+import ForgotPsw2 from './app/public/ForgotPsw2'
+
 
 const router = createBrowserRouter([
   {
@@ -21,6 +24,14 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />
+  },
+  {
+    path: "/forgotpsw",
+    element: <ForgotPsw />
+  },
+  {
+    path: "/forgotpsw2",
+    element: <ForgotPsw2 />
   }
 ])
 
