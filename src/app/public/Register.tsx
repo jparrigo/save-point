@@ -3,7 +3,7 @@ import { Input } from "../../components/input/input";
 
 export default function Register() {
     return (
-      <div className='h-screen flex flex-col items-center justify-center bg-[url(./background.jpg)] bg-cover text-[#D9D9D9]'>
+      <div className='h-screen flex flex-col items-center justify-center text-[#D9D9D9]'>
         <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
           <h1 className="text-5xl">Sign Up</h1>
         </div>
