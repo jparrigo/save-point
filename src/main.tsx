@@ -7,14 +7,19 @@ import {
 } from "react-router"
 import Login from './app/public/Login'
 import Register from './app/public/Register'
-import Home from './app/private/home'
+import Home from './app/private/Home'
 import ForgotPsw from './app/public/ForgotPsw'
 import ForgotPsw2 from './app/public/ForgotPsw2'
+import LandingPage from './app/public/LandingPage'
 
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LandingPage />
+  },
+  {
+    path: "/login",
     element: <Login />
   },
   {

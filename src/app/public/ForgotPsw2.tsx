@@ -3,7 +3,7 @@ import { Input } from "../../components/input/input";
 
 export default function ForgotPsw2() {
     return (
-      <div className='h-screen flex flex-col items-center justify-center text-[#D9D9D9]'>
+      <div className='h-screen bg-[url(./background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
         <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
           <h1 className="text-5xl">Reset your password</h1>
         </div>
@@ -13,7 +13,7 @@ export default function ForgotPsw2() {
           <div className="flex flex-col gap-3 mt-4">
             <Button text='Save Changes' variant='default'/>
           </div>
-          <p className="text-sm text-[#656565] text-center"><a href="/" className="text-white">Back to Login</a></p>
+          <p className="text-sm text-[#656565] text-center"><a href="/login" className="text-white">Back to Login</a></p>
         </section>
       </div>
     )

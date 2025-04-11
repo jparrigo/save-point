@@ -122,7 +122,7 @@
   }
   body {
     /* @apply bg-background text-foreground; */
-    background-image: url('/public/background.jpg');
-    background-size: cover;
+    color: #D9D9D9;
+    background-color: #141414;
   }
 }
