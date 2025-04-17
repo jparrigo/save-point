@@ -12,7 +12,7 @@ let gamesList = [
 
 export default function Home() {
   return (
-    <main className="bg-[url(./background.jpg)] bg-cover">
+    <main className="bg-[url(./default.png)] bg-cover min-h-screen">
       <NavBar />
       <div className="flex justify-center py-24 flex-col items-center px-40">
         

@@ -1,17 +1,18 @@
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { useNavigate } from "react-router";
+import { useMatch, useNavigate } from "react-router";
 
 export default function NavBar() {
   const navigate = useNavigate()
+  
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9]">
       <h1 className="font-bold text-xl">Save Point</h1>
       <div className="flex flex-row items-center gap-6">
-        <a href="">Home</a>
-        <a href="">Library</a>
-        <a href="">Forum</a>
+        <a className={useMatch("/home") ? "text-white" : "text-white/40"} href="/home">Home</a>
+        <a className={useMatch("/library") ? "text-white" : "text-white/40"} href="/library">Library</a>
+        <a className={useMatch("/forum") ? "text-white" : "text-white/40"} href="">Forum</a>
         
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -20,7 +21,7 @@ export default function NavBar() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="dark">
             <DropdownMenuLabel>
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
