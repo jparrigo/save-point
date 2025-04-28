@@ -17,7 +17,7 @@ export default function Login() {
         <p className="text-sm text-[#656565] text-left">Forgot your password? <a href="/forgotpsw" className="text-white">Click here</a></p>
         <div className="flex flex-col gap-3 mt-4">
           <Button text='Sign In' variant='default' onPress={() => navigate("/home")}/>
-          <Button text='Sign in with Google' variant='google' onPress={() => navigate("/Game")}/>
+          <Button text='Sign in with Google' variant='google' onPress={() => navigate("/game")}/>
         </div>
         <p className="text-sm text-[#656565] text-center">Dont't have an account? <a href="/register" className="text-white">Sign up</a></p>
       </section>

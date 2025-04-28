@@ -1,7 +1,6 @@
 import React from "react";
 
 type GameCardProps = {
-  title: string;
   image: string;
   onClick?: () => void;
 };

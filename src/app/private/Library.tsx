@@ -1,12 +1,12 @@
 
-import { BadgeCheck, Bell, CreditCard, Ellipsis, Pencil, Sparkles } from "lucide-react";
+import { ChartColumn, Ellipsis, Link, Pencil, Trash2 } from "lucide-react";
 import NavBar from "../../components/navbar/navbar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../components/ui/dropdown-menu";
 
 let usersGameList = [
   {
-    category: "Completed",
+    category: "✅ Completed",
     list: [
       {
         title: "Far Cry 3",
@@ -19,7 +19,7 @@ let usersGameList = [
     ]
   },
   {
-    category: "Progress",
+    category: "⏱️ Progress",
     list: [
       {
         title: "Fortnite Save The World",
@@ -36,7 +36,7 @@ let usersGameList = [
     ]
   },
   {
-    category: "Wish List",
+    category: "📜 Wish List",
     list: [
       {
         title: "Fortnite Save The World",
@@ -94,16 +94,19 @@ export default function Library() {
                                   <DropdownMenuSeparator />
                                   <DropdownMenuGroup>
                                     <DropdownMenuItem>
-                                      <BadgeCheck />
-                                      Account
+                                      <Link />
+                                      Copy Link
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
-                                      <CreditCard />
-                                      Billing
+                                      <ChartColumn />
+                                      Stats
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                      <Bell />
-                                      Notifications
+                                  </DropdownMenuGroup>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuGroup>
+                                    <DropdownMenuItem className="bg-red-500/50">
+                                      <Trash2 color="white"/>
+                                      Remove
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                 </DropdownMenuContent>

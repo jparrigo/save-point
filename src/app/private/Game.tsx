@@ -1,3 +1,4 @@
+import DialogAddGame from "../../components/dialog/dialog.addgame";
 import GameCard from "../../components/gamecard/gamecard";
 import NavBar from "../../components/navbar/navbar";
 import { Plus, ThumbsUp, ThumbsDown } from "lucide-react";
@@ -5,12 +6,12 @@ import { Plus, ThumbsUp, ThumbsDown } from "lucide-react";
 export default function Game() {
   const game = {
     cover: "src/assets/teste.png",
-    title: "Mortal Kombat X",
+    title: "Mortal Kombat X",
     score: 8.5,
     about:
       "Lorem ipsum dolor sit amet. Vel consequatur corporis non similique fugit et consequatur quod et fuga fugiat eos ullam optio.",
     genre: "Fighting",
-    platforms: "PC, PlayStation 4, Xbox One",
+    platforms: "PC, PlayStation 4, Xbox One",
     developer: "Netherrealm",
     achievements: 110,
   };
@@ -33,13 +34,7 @@ export default function Game() {
           <div className="w-full md:w-3/4 p-4 mt-6">
             <div className="flex items-start justify-between">
               <h1 className="text-4xl font-semibold mb-6">{game.title}</h1>
-              <button
-                onClick={handleAdd}
-                className="hidden md:flex items-center gap-2 bg-purple-800/60 hover:bg-purple-700/70 px-4 py-2 rounded-md transition-colors"
-              >
-                <Plus size={18} />
-                Add to list
-              </button>
+              <DialogAddGame />
             </div>
 
             <p className="text-lg font-medium mb-2">
@@ -62,12 +57,6 @@ export default function Game() {
               <p>
                 <span className="opacity-70">Amount of achievements:</span> {game.achievements}
               </p>
-              <button
-              onClick={handleAdd}
-              className="md:hidden mt-8 w-full flex items-center justify-center gap-2 bg-purple-800/60 hover:bg-purple-700/70 px-4 py-3 rounded-md transition-colors">
-              <Plus size={18} />
-              Add to list
-              </button>
             </div>
 
             {/* Reviews Section */}
@@ -77,10 +66,10 @@ export default function Game() {
                 <h2 className="text-2xl mb-4">Escreva uma análise de: {game.title}</h2>
                 <p className="mb-2">Você recomenda esse jogo?</p>
                 <div className="flex gap-4 mb-4">
-                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md">
+                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer">
                     <ThumbsUp size={24} />
                   </button>
-                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md">
+                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer">
                     <ThumbsDown size={24} />
                   </button>
                 </div>
