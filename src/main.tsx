@@ -12,6 +12,7 @@ import ForgotPsw from './app/public/ForgotPsw'
 import ForgotPsw2 from './app/public/ForgotPsw2'
 import LandingPage from './app/public/LandingPage'
 import Library from './app/private/Library'
+import Game from './app/private/Game'
 
 
 const router = createBrowserRouter([
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/library",
     element: <Library />
+  },
+  {
+    path: "/game",
+    element: <Game />
   }
   
 ])

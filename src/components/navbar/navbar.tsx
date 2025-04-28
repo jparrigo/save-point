@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
+import { BadgeCheck, Bell, CreditCard, LogOut, Search, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useMatch, useNavigate } from "react-router";
@@ -9,6 +9,16 @@ export default function NavBar() {
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9]">
       <h1 className="font-bold text-xl">Save Point</h1>
+      <div className="w-2/4 flex items-center bg-gradient-to-r from-[#1A1919] to-[#0F0F0F] border border-[#515151] rounded-[6px] px-4 py-2 gap-4">
+        <Search size={20}/>
+        <input
+          onFocus={() => console.log("Esta focado!")}
+          className="w-full focus:outline-none  text-white text-sm placeholder:text-[#515151]" 
+          id="input" 
+          type="text" 
+          placeholder="Search for a game"
+        />
+      </div>
       <div className="flex flex-row items-center gap-6">
         <a className={useMatch("/home") ? "text-white" : "text-white/40"} href="/home">Home</a>
         <a className={useMatch("/library") ? "text-white" : "text-white/40"} href="/library">Library</a>
