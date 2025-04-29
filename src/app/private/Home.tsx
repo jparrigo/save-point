@@ -26,7 +26,6 @@ export default function Home() {
               return (
                 <GameCard
                   key={i}
-                  title={item.title}
                   image={item.image}
                 />
               )
@@ -44,7 +43,6 @@ export default function Home() {
               return (
                 <GameCard
                   key={i}
-                  title={item.title}
                   image={item.image}
                 />
               )

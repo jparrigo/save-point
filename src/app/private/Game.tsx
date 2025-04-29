@@ -31,16 +31,7 @@ export default function Game() {
           </div>
 
           {/* Info content */}
-          <div className="flex-1 p-2">
-            <div className="flex flex-col pt-6 sm:flex-row sm:items-center sm:justify-between mb-6">
-              <h1 className="text-4xl font-semibold">{game.title}</h1>
-              <button
-                onClick={handleAdd}
-                className="mt-4 sm:mt-0 flex items-center justify-center gap-2 bg-purple-800/60 hover:bg-purple-700/70 px-4 py-3 rounded-md transition-colors"
-              >
-                <Plus size={18} />
-                Add to list
-              </button>
+
             </div>
 
             <p className="text-lg font-medium mb-2">
