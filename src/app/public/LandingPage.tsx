@@ -1,55 +1,85 @@
-import { Facebook, FolderClosed, Gamepad2, Instagram, ScanQrCode, Twitter } from "lucide-react";
-import { useEffect } from "react";
+import { Facebook, FolderClosed, Gamepad2, Instagram, Menu, ScanQrCode, Twitter } from "lucide-react";
+import { useEffect, useState } from "react";
+import useScreenSize from "../../lib/useScreenSize";
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { Separator } from "../../components/ui/separator";
+import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router";
 
 export default function LandingPage() {
-  useEffect(() => {
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchorLink = target.closest('a[href^="#"]');
-      
-      if (anchorLink) {
-        e.preventDefault();
-        const targetId = anchorLink.getAttribute('href');
-        
-        if (targetId && targetId !== '#') {
-          const targetElement = document.querySelector(targetId);
-          
-          if (targetElement) {
-            window.scrollTo({
-              top: targetElement.getBoundingClientRect().top + window.pageYOffset - 80,
-              behavior: 'smooth'
-            });
-          }
-        }
-      }
-    };
+  const size = useScreenSize();
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false);
 
-    document.addEventListener('click', handleAnchorClick);
-    
-    return () => {
-      document.removeEventListener('click', handleAnchorClick);
-    };
-  }, []);
+  const handleClick = (id: string) => {
+    if (open) {
+      setOpen(false)
+    }
+  
+    setTimeout(() => {
+      const element = document.getElementById(id)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 500)
+  }
+
   return (
     <main className="">
       <nav className="flex flex-row items-center justify-between mx-12 my-6">
-        <h1 className="text-3xl font-bold">Save Point</h1>
-        <div className="flex flex-row items-center gap-8">
-          <a href="#sobre" className="cursor-pointer transition-colors text-white/40 hover:text-white">Sobre</a>
-          <span>/</span>
-          <a href="#funcionalidades" className="cursor-pointer transition-colors text-white/40 hover:text-white">Funcionalidades</a>
-          <span>/</span>
-          <a href="#contato" className="cursor-pointer transition-colors text-white/40 hover:text-white">Contato</a>
-        </div>
-        <div className="flex flex-row items-center gap-6">
-          <a href="/login">Sign In</a>
-          <a className="bg-purple-800 text-purple-400 px-4 py-2 rounded-md transition-all hover:shadow-lg hover:shadow-purple-500/30 hover:text-purple-300" href="/register">Get Started</a>
-        </div>
+        <h1 className="text-3xl font-bold">{size.width <= 800 ? "SP" : "Save Point" }</h1>
+        {
+          size.width >= 800
+          ? (
+            <>
+              <div className="flex flex-row items-center gap-8">
+                <Button variant="link" className="w-fit hover:no-underline transition-colors text-white/40 hover:text-white" onClick={() => handleClick("sobre")}>Sobre</Button>
+                <span>/</span>
+                <Button variant="link" className="w-fit hover:no-underline transition-colors text-white/40 hover:text-white" onClick={() => handleClick("funcionalidades")}>Funcionalidades</Button>
+                <span>/</span>
+                <Button variant="link" className="w-fit hover:no-underline transition-colors text-white/40 hover:text-white" onClick={() => handleClick("contato")}>Contato</Button>
+              </div>
+              <div className="flex flex-row items-center gap-6">
+                <a href="/login">Sign In</a>
+                <a className="bg-purple-800 text-purple-400 px-4 py-2 rounded-md transition-all hover:shadow-lg hover:shadow-purple-500/30 hover:text-purple-300" href="/register">Get Started</a>
+              </div>
+            </>
+          ) : (
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger>
+                <Menu />
+              </SheetTrigger>
+              <SheetContent forceMount className="dark py-6 px-4" side="top">
+                <SheetTitle hidden>Title</SheetTitle>
+                <SheetDescription hidden>Description</SheetDescription>
+                <section className="flex flex-col gap-6">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
+                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">shadcn</span>
+                      <span className="truncate text-xs">shadcn@gmail.com</span>
+                    </div>
+                  </div>
+                  <Separator />
+                  <Button variant="link" className="w-fit text-xl" onClick={() => handleClick("sobre")}>Sobre</Button>
+                  <Button variant="link" className="w-fit text-xl" onClick={() => handleClick("funcionalidades")}>Funcionalidades</Button>
+                  <Button variant="link" className="w-fit text-xl" onClick={() => handleClick("contato")}>Contato</Button>
+                  <Button variant="outline" onClick={() => navigate("/login")}>Sign In</Button>
+                  <Button variant="purple" onClick={() => navigate("/registar")}>Get Started</Button>
+                </section>
+              </SheetContent>
+            </Sheet>
+          )
+        }
       </nav>
-      <section className="py-20 px-20 flex flex-row items-center justify-center gap-6 bg-[#101010]">
+      <section className="py-20 px-20 flex flex-row max-md:flex-col items-center justify-center gap-6 bg-[#101010]">
         <div className="flex flex-col items-start">
           <h6 className="bg-purple-800 text-purple-400 px-4 rounded-2xl">Plataforma 100% gratuita</h6>
-          <h1 className="font-bold text-4xl w-100 mt-6">Guarde o seus Jogos da melhor forma</h1>
+          <h1 className="font-bold text-4xl w-100 mt-6 max-md:text-3xl">Guarde o seus Jogos da melhor forma</h1>
           <p className="text-lg w-100 text-white/40">Encontre novos jogos, armazene o seu histórico, crie listas de desejos...</p>
           <div className="grid grid-cols-2 mt-6 gap-4">
             <span className="bg-[#101010] border border-[#343434] w-full text-center h-fit px-4 py-2 rounded-2xl text-sm">Totalmente Seguro</span>
