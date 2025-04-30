@@ -1,5 +1,5 @@
-import { Button } from "../../components/button/button";
 import { Input } from "../../components/input/input";
+import { Button } from "../../components/ui/button";
 
 export default function ForgotPsw2() {
     return (
@@ -11,7 +11,7 @@ export default function ForgotPsw2() {
           <Input title="Password*" placeholder="Enter your new password"/>
           <Input title="Repeat Password*" placeholder="Repeat your password"/>
           <div className="flex flex-col gap-3 mt-4">
-            <Button text='Save Changes' variant='default'/>
+            <Button variant='purple' size="lg">Save Changes</Button>
           </div>
           <p className="text-sm text-[#656565] text-center"><a href="/login" className="text-white">Back to Login</a></p>
         </section>

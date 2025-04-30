@@ -1,7 +1,7 @@
-import DialogAddGame from "../../components/dialog/dialog.addgame";
-import GameCard from "../../components/gamecard/gamecard";
-import NavBar from "../../components/navbar/navbar";
-import { Plus, ThumbsUp, ThumbsDown } from "lucide-react";
+import DialogAddGame from "../../../components/dialog/dialog.addgame";
+import GameCard from "../../../components/gamecard/gamecard";
+import NavBar from "../../../components/navbar/navbar";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 export default function Game() {
   const game = {
@@ -104,7 +104,7 @@ export default function Game() {
                   {/* Análise */}
                   <div className="flex-1 mt-4 md:mt-0 md:ml-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-row">
                         <ThumbsUp size={24} />
                         <span className="text-lg font-semibold">Recomendado</span>
                       </div>

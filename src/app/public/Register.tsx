@@ -1,5 +1,5 @@
-import { Button } from "../../components/button/button";
 import { Input } from "../../components/input/input";
+import { Button } from "../../components/ui/button";
 
 export default function Register() {
     return (
@@ -13,8 +13,11 @@ export default function Register() {
           <Input title="Password*" placeholder="Enter your password"/>
           <Input title="Repeat Password*" placeholder="Repeat your password"/>
           <div className="flex flex-col gap-3 mt-4">
-            <Button text='Get Started' variant='default'/>
-            <Button text='Sign in with Google' variant='google'/>
+            <Button size="lg" variant='purple'>Get Started</Button>
+            <Button size="lg" variant='default'>
+              <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
+              Sign in with Google
+            </Button>
           </div>
           <p className="text-sm text-[#656565] text-center">Already have an account? <a href="/login" className="text-white">Login</a></p>
         </section>
