@@ -1,5 +1,5 @@
 import { Facebook, FolderClosed, Gamepad2, Instagram, Menu, ScanQrCode, Twitter } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useScreenSize from "../../lib/useScreenSize";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
