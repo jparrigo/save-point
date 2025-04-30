@@ -7,12 +7,12 @@ import {
 } from "react-router"
 import Login from './app/public/Login'
 import Register from './app/public/Register'
-import Home from './app/private/Home'
 import ForgotPsw from './app/public/ForgotPsw'
 import ForgotPsw2 from './app/public/ForgotPsw2'
 import LandingPage from './app/public/LandingPage'
-import Library from './app/private/Library'
-import Game from './app/private/Game'
+import Home from './app/private/home/Home'
+import Library from './app/private/library/Library'
+import Game from './app/private/game/Game'
 
 
 const router = createBrowserRouter([

@@ -1,5 +1,5 @@
-import GameCard from "../../components/gamecard/gamecard";
-import NavBar from "../../components/navbar/navbar";
+import GameCard from "../../../components/gamecard/gamecard";
+import NavBar from "../../../components/navbar/navbar";
 
 let gamesList = [
   { title: "The Witcher 3", image: "https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg" },

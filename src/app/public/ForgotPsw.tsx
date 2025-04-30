@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import { Button } from "../../components/button/button";
 import { Input } from "../../components/input/input";
+import { Button } from "../../components/ui/button";
 
 export default function ForgotPsw() {
     const navigate = useNavigate()
@@ -12,7 +12,7 @@ export default function ForgotPsw() {
         <section className="w-90 flex flex-col gap-4">
           <Input title="Enter your Email to recovery your account*" placeholder="Enter your email"/>
           <div className="flex flex-col gap-3 mt-4">
-            <Button text='Request password reset' variant='default' onPress={() => navigate("/forgotpsw2")}/>
+            <Button variant="purple" size="lg" onClick={() => navigate("/forgotpsw2")}>Request password reset</Button>
           </div>
           <p className="text-sm text-[#656565] text-center"><a href="/login" className="text-white">Back to Login</a></p>
         </section>

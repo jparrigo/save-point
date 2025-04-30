@@ -1,7 +1,7 @@
-import DialogAddGame from "../../components/dialog/dialog.addgame";
-import GameCard from "../../components/gamecard/gamecard";
-import NavBar from "../../components/navbar/navbar";
-import { Plus, ThumbsUp, ThumbsDown } from "lucide-react";
+import DialogAddGame from "../../../components/dialog/dialog.addgame";
+import GameCard from "../../../components/gamecard/gamecard";
+import NavBar from "../../../components/navbar/navbar";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 export default function Game() {
   const game = {
@@ -24,15 +24,15 @@ export default function Game() {
     <main className="bg-[url(./default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
       <section className="max-w-8xl mx-auto pt-50 px-20">
-        <div className="flex flex-col md:flex-row gap-2">
+        <div className="flex flex-wrap gap-y-8 md:gap-x-6">
           {/* GameCard */}
-          <div className="w-full md:w-1/5 p-4">
+          <div className="w-full md:max-w-xs p-4 flex-shrink-0">
             <GameCard image={game.cover} onClick={handleAdd} />
           </div>
 
           {/* Info content */}
-          <div className="w-full md:w-3/4 p-4 mt-6">
-            <div className="flex items-start justify-between">
+          <div className="flex-1 min-w-0 p-4">
+            <div className="flex items-start justify-between flex-wrap gap-4">
               <h1 className="text-4xl font-semibold mb-6">{game.title}</h1>
               <DialogAddGame />
             </div>
@@ -104,7 +104,7 @@ export default function Game() {
                   {/* Análise */}
                   <div className="flex-1 mt-4 md:mt-0 md:ml-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-row">
                         <ThumbsUp size={24} />
                         <span className="text-lg font-semibold">Recomendado</span>
                       </div>
