@@ -9,6 +9,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { useState } from "react"
 import { Button } from "../ui/button"
+import { DialogDescription } from "@radix-ui/react-dialog"
 
 export default function DialogAddGame() {
   const [open, setOpen] = useState(false)
@@ -31,6 +32,7 @@ export default function DialogAddGame() {
       <DialogContent className="dark">
         <DialogHeader>
           <DialogTitle>Mortal Kombat X</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div>
           <div className="flex flex-row items-center justify-between">
