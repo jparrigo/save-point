@@ -1,6 +1,7 @@
 import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
 import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; // Supondo que você tenha esse componente de análise
+import { Button } from "../../../components/ui/button";
 
 export default function Account() {
   const user = {
@@ -73,12 +74,12 @@ export default function Account() {
             </p>
           </div>
           <div className="flex gap-4">
-            <button className="bg-purple-700 hover:bg-purple-600 px-4 py-2 rounded-md text-sm">
+            <Button variant="purple">
               Edit Profile
-            </button>
-            <button className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-md text-sm">
+            </Button>
+            <Button variant="outline" className="dark">
               Settings
-            </button>
+            </Button>
           </div>
         </div>
 
