@@ -13,6 +13,7 @@ import LandingPage from './app/public/LandingPage'
 import Home from './app/private/home/Home'
 import Library from './app/private/library/Library'
 import Game from './app/private/game/Game'
+import Account from './app/private/account/account'
 
 
 const router = createBrowserRouter([
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/game",
     element: <Game />
+  },
+  {
+    path: "/account",
+    element: <Account />
   }
   
 ])
