@@ -9,7 +9,7 @@ import { Separator } from "../ui/separator";
 export default function NavBar() {
   const navigate = useNavigate()
   const size = useScreenSize()
-  
+
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9] z-50">
       <h1 className="font-bold text-xl">{size.width <= 800 ? "SP" : "Save Point"}</h1>
@@ -17,7 +17,7 @@ export default function NavBar() {
         <Search size={20}/>
         <input
           onFocus={() => console.log("Esta focado!")}
-          className="w-full focus:outline-none  text-white text-sm placeholder:text-[#515151]" 
+          className="w-full focus:outline-none text-white text-sm placeholder:text-[#515151]" 
           id="input" 
           type="text" 
           placeholder={size.width <= 800 ? "Search here" : "Search for a game"}
@@ -60,7 +60,7 @@ export default function NavBar() {
                   </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/account")}> {/* Redireciona para Account */}
                     <BadgeCheck />
                     Account
                   </DropdownMenuItem>
@@ -109,7 +109,6 @@ export default function NavBar() {
           </Sheet>
         )
       }
-        
     </nav>
   )
 }

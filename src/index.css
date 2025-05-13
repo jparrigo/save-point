@@ -126,3 +126,22 @@
     background-color: #141414;
   }
 }
+
+.scrollbar-transparent::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrollbar-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-transparent::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1); /* levemente visível */
+  border-radius: 4px;
+}
+
+/* Firefox */
+.scrollbar-transparent {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}

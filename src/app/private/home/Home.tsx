@@ -19,7 +19,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-white w-full text-left pl-8">Popular Games</h1>
 
         {/* Contêiner rolável para os cards */}
-        <div className="w-full flex gap-20 overflow-x-auto">
+        <div className="w-full flex gap-20 overflow-x-auto scrollbar-transparent">
           {/* Cada GameCard com tamanho fixo e sem encolher */}
           {
             gamesList.map((item, i) => {
@@ -36,7 +36,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-white w-full text-left pl-8 mt-8">Games Suggestions</h1>
 
         {/* Contêiner rolável para os cards */}
-        <div className="w-full flex gap-20 overflow-x-auto">
+        <div className="w-full flex gap-20 overflow-x-auto scrollbar-transparent">
           {/* Cada GameCard com tamanho fixo e sem encolher */}
           {
             gamesList.map((item, i) => {
@@ -50,6 +50,7 @@ export default function Home() {
           }
         </div>
       </div>
+      
     </main>
   );
 }
