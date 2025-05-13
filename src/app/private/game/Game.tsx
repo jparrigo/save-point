@@ -1,7 +1,10 @@
+import { useState } from "react";
 import DialogAddGame from "../../../components/dialog/dialog.addgame";
 import GameCard from "../../../components/gamecard/gamecard";
 import NavBar from "../../../components/navbar/navbar";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../../components/ui/button";
 
 export default function Game() {
   const game = {
@@ -20,23 +23,41 @@ export default function Game() {
     console.log("Added to list");
   };
 
+  const [myReview, setMyReview] = useState({
+    like: false,
+    unlike: false,
+    description: ""
+  })
+
+  function setLike(type: "like" | "unlike") {
+    if (type == "like") {
+      setMyReview({
+        ...myReview,
+        like: !myReview.like,
+        unlike: false
+      })
+    } else {
+      setMyReview({
+        ...myReview,
+        like: false,
+        unlike: !myReview.unlike
+      })
+    }
+  }
+
   return (
     <main className="bg-[url(./default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
-      <section className="max-w-8xl mx-auto pt-50 px-20">
-        <div className="flex flex-wrap gap-y-8 md:gap-x-6">
-          {/* GameCard */}
-          <div className="w-full md:max-w-xs p-4 flex-shrink-0">
-            <GameCard image={game.cover} onClick={handleAdd} />
-          </div>
-
+      <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
+        {/* GameCard */}
+        <GameCard image={game.cover} onClick={handleAdd} />
+        <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
-          <div className="flex-1 min-w-0 p-4">
-            <div className="flex items-start justify-between flex-wrap gap-4">
-              <h1 className="text-4xl font-semibold mb-6">{game.title}</h1>
+          <div className="flex flex-col items-start">
+            <div className="flex items-start justify-between w-full">
+              <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.title}</h1>
               <DialogAddGame />
             </div>
-
             <p className="text-lg font-medium mb-2">
               <span className="opacity-70">Score:</span> {game.score}
             </p>
@@ -63,20 +84,31 @@ export default function Game() {
             <div className="mt-20">
               {/* Write a Review */}
               <div className="bg-black/30 p-6 rounded-lg">
-                <h2 className="text-2xl mb-4">Escreva uma análise de: {game.title}</h2>
-                <p className="mb-2">Você recomenda esse jogo?</p>
+                <h2 className="text-2xl mb-4 font-bold max-md:text-sm">Write your analysis of: <span className="font-light">{game.title}</span></h2>
+                <p className="mb-6 font-light max-md:text-sm">Do you recommend this game?</p>
                 <div className="flex gap-4 mb-4">
-                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer">
-                    <ThumbsUp size={24} />
+                  <button onClick={() => setLike("like")} className={cn(
+                    "bg-purple-800/40 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer",
+                    myReview.like ? "outline-1 outline-purple-700 bg-purple-800/70" : ""
+                  )}>
+                    <ThumbsUp size={24} color={myReview.like ? "white" : "#6e11b0"}/>
                   </button>
-                  <button className="bg-purple-800/60 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer">
-                    <ThumbsDown size={24} />
+                  <button onClick={() => setLike("unlike")} className={cn(
+                    "bg-purple-800/40 hover:bg-purple-700/70 p-3 rounded-md cursor-pointer",
+                    myReview.unlike ? "outline-1 outline-purple-700 bg-purple-800/70" : ""
+                  )}>
+                    <ThumbsDown size={24} color={myReview.unlike ? "white" : "#6e11b0"}/>
                   </button>
                 </div>
                 <textarea
-                  placeholder="Escreva a sua análise"
-                  className="w-full p-4 rounded-md bg-black/40 text-slate-100 h-40"
+                  value={myReview.description}
+                  onChange={(e) => setMyReview({...myReview, description: e.target.value})}
+                  placeholder="Write your review here"
+                  className="w-full p-4 rounded-md bg-black/40 text-slate-100 h-40 mb-5 max-md:text-sm"
                 />
+                <Button variant="purple" className="dark w-full" onClick={() => console.log(myReview)}>
+                  Send my review
+                </Button>
               </div>
 
               {/* Divider */}
@@ -119,7 +151,6 @@ export default function Game() {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
