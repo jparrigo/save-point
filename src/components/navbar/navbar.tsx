@@ -92,14 +92,15 @@ export default function NavBar() {
               <section className="flex flex-col gap-6">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="shadcn" />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarImage src="src/assets/profile.jpg" alt="shadcn" />
+                    <AvatarFallback className="rounded-lg">SP</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">shadcn</span>
-                    <span className="truncate text-xs">shadcn@gmail.com</span>
+                    <span className="truncate font-semibold">savepoint</span>
+                    <span className="truncate text-xs">savepoint@gmail.com</span>
                   </div>
                 </div>
+                <a className={useMatch("/account") ? "text-white" : "text-white/40"} href="/account">Account</a>
                 <Separator />
                 <a className={useMatch("/home") ? "text-white" : "text-white/40"} href="/home">Home</a>
                 <a className={useMatch("/library") ? "text-white" : "text-white/40"} href="/library">Library</a>

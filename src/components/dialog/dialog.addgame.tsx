@@ -24,10 +24,10 @@ export default function DialogAddGame() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant="purple">
-          <Plus size={18} />
+        <div className="bg-purple-800 outline outline-purple-600 text-purple-300 transition-all hover:shadow-lg hover:shadow-purple-500/30 hover:text-purple-100 cursor-pointer flex items-center rounded-md gap-2 h-9 px-3 py-2 text-sm">
+          <Plus size={18}/>
           Add to list
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="dark">
         <DialogHeader>
