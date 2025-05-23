@@ -14,6 +14,7 @@ import Home from './app/private/home/Home'
 import Library from './app/private/library/Library'
 import Game from './app/private/game/Game'
 import Account from './app/private/account/account'
+import ProtectedRoute from './components/protectedroute/ProtectedRoute'
 
 
 const router = createBrowserRouter([
@@ -39,19 +40,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />
+    element: <ProtectedRoute><Home /></ProtectedRoute> 
   },
   {
     path: "/library",
-    element: <Library />
+    element: <ProtectedRoute><Library /></ProtectedRoute>
   },
   {
     path: "/game",
-    element: <Game />
+    element: <ProtectedRoute><Game /></ProtectedRoute>
   },
   {
     path: "/account",
-    element: <Account />
+    element: <ProtectedRoute><Account /></ProtectedRoute>
   }
   
 ])
