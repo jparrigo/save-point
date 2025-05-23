@@ -33,6 +33,11 @@ export default function Login() {
       password: data.password
     }).then((res) => {
       console.log(res.data)
+      localStorage.setItem("@savepoint/login", JSON.stringify({
+        id: res.data.user.id,
+        username: res.data.user.username,
+        email: res.data.user.email
+      }))
       navigate("/home")
     }).catch((e) => {
       console.log(e.response.data.message)
