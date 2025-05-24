@@ -67,7 +67,7 @@ let usersGameList = [
 export default function Library() {
   const navigate = useNavigate()
   return (
-    <main className="bg-[url(./default.png)] bg-cover min-h-screen">
+    <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
       <div className="pt-20">
         <section className="px-20 mt-20">
