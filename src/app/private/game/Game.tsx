@@ -46,7 +46,7 @@ export default function Game() {
   }
 
   return (
-    <main className="bg-[url(./default.png)] bg-cover min-h-screen text-slate-100">
+    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
