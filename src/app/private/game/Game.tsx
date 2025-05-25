@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import DialogAddGame from "../../../components/dialog/dialog.addgame";
 import GameCard from "../../../components/gamecard/gamecard";
 import NavBar from "../../../components/navbar/navbar";
@@ -6,56 +7,81 @@ import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../../../components/ui/button";
 
-export default function Game() {
-  const game = {
-    cover: "src/assets/teste.png",
-    title: "Mortal Kombat X",
-    score: 8.5,
-    about:
-      "Lorem ipsum dolor sit amet. Vel consequatur corporis non similique fugit et consequatur quod et fuga fugiat eos ullam optio.",
-    genre: "Fighting",
-    platforms: "PC, PlayStation 4, Xbox One",
-    developer: "Netherrealm",
-    achievements: 110,
-  };
+interface GameData {
+  //score: 0;
+  id: string;
+  igdbId: number;
+  name: string;
+  summary: string;
+  genres: string[];
+  platforms: string[];
+  companies: string[];
+  artworks: string[];
+  screenshots: string[];
+  achievements: string[];
+}
 
-  const handleAdd = () => {
-    console.log("Added to list");
-  };
+export default function Game() {
+  const { id } = useParams<{ id: string }>();
+  const [game, setGame] = useState<GameData | null>(null);
 
   const [myReview, setMyReview] = useState({
     like: false,
     unlike: false,
     description: ""
-  })
+  });
 
   function setLike(type: "like" | "unlike") {
     if (type == "like") {
-      setMyReview({
-        ...myReview,
-        like: !myReview.like,
-        unlike: false
-      })
+      setMyReview({ ...myReview, like: !myReview.like, unlike: false });
     } else {
-      setMyReview({
-        ...myReview,
-        like: false,
-        unlike: !myReview.unlike
-      })
+      setMyReview({ ...myReview, like: false, unlike: !myReview.unlike });
     }
   }
+  
+  const handleAdd = () => {
+    console.log("Added to list");
+  };
+  
+  useEffect(() => {
+    async function fetchGame() {
+      try {
+        const response = await fetch("http://localhost:3000/games");
+        const data = await response.json();
+        const found = data.find((g: GameData) => g.id === id);
+        setGame(found);
+      } catch (error) {
+        console.error("Erro ao buscar jogo:", error);
+      }
+    }
+
+    if (id) fetchGame();
+  }, [id]);
+
+  if (!game) {
+    return (
+      <main className="min-h-screen text-white bg-black flex justify-center items-center">
+        <p>Carregando dados do jogo...</p>
+      </main>
+    );
+  }
+//  const handleAdd = () => {
+//    console.log("Added to list");
+//  };
+
+  
 
   return (
     <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
-        <GameCard image={game.cover} onClick={handleAdd} />
+        <GameCard image={game.artworks[0] || "/default.png"} onClick={handleAdd} />
         <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
           <div className="flex flex-col items-start">
             <div className="flex items-start justify-between w-full">
-              <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.title}</h1>
+              <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
               <DialogAddGame />
             </div>
             <p className="text-lg font-medium mb-2">
@@ -63,20 +89,20 @@ export default function Game() {
             </p>
 
             <p className="opacity-70 mb-1">About:</p>
-            <p className="leading-relaxed text-sm sm:text-base">{game.about}</p>
+            <p className="leading-relaxed text-sm sm:text-base">{game.summary}</p>
 
             <div className="mt-10 space-y-5 text-sm sm:text-base">
               <p>
-                <span className="opacity-70">Genre:</span> {game.genre}
+                <span className="opacity-70">Genre:</span> {game.genres.join(", ")}
               </p>
               <p>
-                <span className="opacity-70">Platforms:</span> {game.platforms}
+                <span className="opacity-70">Platforms:</span> {game.platforms.join(", ")}
               </p>
               <p>
-                <span className="opacity-70">Developer:</span> {game.developer}
+                <span className="opacity-70">Developer:</span> {game.companies.join(", ") || "Unknown"}
               </p>
               <p>
-                <span className="opacity-70">Amount of achievements:</span> {game.achievements}
+                <span className="opacity-70">Amount of achievements:</span> {game.achievements.length || "Unknown"}
               </p>
             </div>
 
