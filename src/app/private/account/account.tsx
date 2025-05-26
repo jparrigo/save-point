@@ -3,15 +3,6 @@ import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
 import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; 
 import { Button } from "../../../components/ui/button";
-import { instance } from "../../../lib/axios";
-
-const user = {
-  name: "Bruno_DUnks", // Será sobrescrito com nome real depois
-  gamesCount: 87,
-  achievements: 542,
-  lastPlayed: "Rayman Legends",
-  friends: 100,
-};
 
 const gamesList = [
   { title: "The Witcher 3", image: "https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg" },
@@ -51,13 +42,24 @@ const wishlist = [
 ];
 
 export default function Account() {
-  const [username, setUsername] = useState(user.name);
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    gamesCount: 87,
+    achievements: 542,
+    lastPlayed: "Rayman Legends",
+    friends: 100,
+  });
 
   useEffect(() => {
     const localData = localStorage.getItem("@savepoint/login");
     if (localData) {
       const parsed = JSON.parse(localData);
-      setUsername(parsed.username);
+      setUser({
+        ...user,
+        username: parsed.username,
+        email: parsed.email
+      });
     }
   }, []);
 
@@ -74,22 +76,18 @@ export default function Account() {
             className="w-28 h-28 rounded-md"
           />
           <div className="flex-1">
-            <h1 className="text-3xl font-semibold">{username}</h1>
-            <p className="text-sm opacity-80 mt-2">
-              Number of games: {user.gamesCount}<br />
-              Number of achievements: {user.achievements}<br />
-              Last Game Played: {user.lastPlayed}<br />
-              Friends: {user.friends}
+            <h1 className="text-3xl font-semibold">{user.username}</h1>
+            <p className="text-sm text-white/70">{user.email}</p>
+            <p className="text-sm text-white/60 mt-6">
+              Number of games: <span className="text-white">{user.gamesCount}</span><br />
+              Number of achievements: <span className="text-white">{user.achievements}</span><br />
+              Last Game Played: <span className="text-white">{user.lastPlayed}</span><br />
+              Friends: <span className="text-white">{user.friends}</span>
             </p>
           </div>
-          <div className="flex gap-4">
-            <Button variant="purple">
-              Edit Profile
-            </Button>
-            <Button variant="outline" className="dark">
-              Settings
-            </Button>
-          </div>
+          <Button variant="purple">
+            Edit Profile
+          </Button>
         </div>
 
         {/* Popular Games */}
