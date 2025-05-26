@@ -15,7 +15,7 @@ const GameCard: React.FC<GameCardProps> = ({ image, onClick }) => {
         <img
           src={image}
           alt="Game cover"
-          className="w-full object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
     </div>

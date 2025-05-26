@@ -62,7 +62,7 @@ export default function Account() {
   }, []);
 
   return (
-    <main className="bg-[url(./default.png)] bg-cover min-h-screen text-slate-100">
+    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
       <div className="flex flex-col items-center px-8 pt-40">
 

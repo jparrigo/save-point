@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { instance } from "../../lib/axios";
+import { useNavigate } from "react-router";
 
 const FormSchema = z.object({
   username: z.string({
@@ -26,6 +27,7 @@ const FormSchema = z.object({
 
 
 export default function Register() {
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -45,11 +47,12 @@ export default function Register() {
       password: data.password
     }).then((resp) => {
       console.log(resp.data)
+      navigate("/login")
     })
   } 
 
     return (
-      <div className='h-screen bg-[url(./background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
+      <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
         <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
           <h1 className="text-5xl">Sign Up</h1>
         </div>
