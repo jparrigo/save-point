@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
-import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; // Supondo que você tenha esse componente de análise
+import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; 
 import { Button } from "../../../components/ui/button";
+import { instance } from "../../../lib/axios";
 
 const user = {
-  name: "Bruno_DUnks",
+  name: "Bruno_DUnks", // Será sobrescrito com nome real depois
   gamesCount: 87,
   achievements: 542,
   lastPlayed: "Rayman Legends",
@@ -37,8 +39,6 @@ const userReviews = [
   { game: "Hollow Knight", review: "sei la" },
   { game: "The Witcher 3", review: "sei la " },
   { game: "Cyberpunk 2077", review: "sei la" },
-
-  
 ];
 
 const wishlist = [
@@ -51,6 +51,16 @@ const wishlist = [
 ];
 
 export default function Account() {
+  const [username, setUsername] = useState(user.name);
+
+  useEffect(() => {
+    const localData = localStorage.getItem("@savepoint/login");
+    if (localData) {
+      const parsed = JSON.parse(localData);
+      setUsername(parsed.username);
+    }
+  }, []);
+
   return (
     <main className="bg-[url(./default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
@@ -64,7 +74,7 @@ export default function Account() {
             className="w-28 h-28 rounded-md"
           />
           <div className="flex-1">
-            <h1 className="text-3xl font-semibold">{user.name}</h1>
+            <h1 className="text-3xl font-semibold">{username}</h1>
             <p className="text-sm opacity-80 mt-2">
               Number of games: {user.gamesCount}<br />
               Number of achievements: {user.achievements}<br />
@@ -112,18 +122,17 @@ export default function Account() {
 
         {/* Wishlist Section */}
         <div className="flex justify-center py-10 flex-col items-center px-4 w-full max-w-6xl">
-        <h1 className="text-3xl font-bold text-white w-full text-left pl-4 mb-4">Wish List</h1>
-        <div className="w-full overflow-x-auto scrollbar-transparent">
+          <h1 className="text-3xl font-bold text-white w-full text-left pl-4 mb-4">Wish List</h1>
+          <div className="w-full overflow-x-auto scrollbar-transparent">
             <div className="flex gap-1 px-2">
-            {wishlist.map((item, i) => (
+              {wishlist.map((item, i) => (
                 <div key={i} className="flex-shrink-0 w-[200px]">
-                <GameCard image={item.image} />
+                  <GameCard image={item.image} />
                 </div>
-            ))}
+              ))}
             </div>
+          </div>
         </div>
-        </div>
-
 
         {/* My Reviews Section */}
         <div className="flex justify-center py-10 flex-col items-center px-4 w-full max-w-6xl">
@@ -138,8 +147,6 @@ export default function Account() {
             </div>
           </div>
         </div>
-
-        
 
       </div>
     </main>
