@@ -16,64 +16,6 @@ interface ListGamesType {
   }[]
 }
 
-let usersGameList = [
-  {
-    category: "✅ Completed",
-    list: [
-      {
-        id: "a",
-        title: "Far Cry 3",
-        img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/220240/capsule_616x353.jpg?t=1738250672"
-      },
-      {
-        id: "b",
-        title: "Far Cry 2",
-        img: "https://m.media-amazon.com/images/I/71hiKRrWkaL.jpg"
-      },
-    ]
-  },
-  {
-    category: "⏱️ Progress",
-    list: [
-      {
-        id: "c",
-        title: "Fortnite Save The World",
-        img: "https://i0.wp.com/xpgamer.com.br/wp-content/uploads/fortnite-recebe-atualizacao-com-itens-exclusivos-no-modo-salve-o-mundo-capa-1.jpg?resize=800%2C500&ssl=1"
-      },
-      {
-        id: "d",
-        title: "Lego Worlds",
-        img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/332310/header.jpg?t=1744306721"
-      },
-      {
-        id: "e",
-        title: "Grand Theft Auto V",
-        img: "https://assets.xboxservices.com/assets/0b/17/0b179504-412d-4af7-9e00-3e3d92633577.jpg?n=GTA-V_GLP-Page-Hero-1084_1920x1080.jpg"
-      }
-    ]
-  },
-  {
-    category: "📜 Wish List",
-    list: [
-      {
-        id: "f",
-        title: "Fortnite Save The World",
-        img: "https://i0.wp.com/xpgamer.com.br/wp-content/uploads/fortnite-recebe-atualizacao-com-itens-exclusivos-no-modo-salve-o-mundo-capa-1.jpg?resize=800%2C500&ssl=1"
-      },
-      {
-        id: "g",
-        title: "Lego Worlds",
-        img: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/332310/header.jpg?t=1744306721"
-      },
-      {
-        id: "h",
-        title: "Grand Theft Auto V",
-        img: "https://assets.xboxservices.com/assets/0b/17/0b179504-412d-4af7-9e00-3e3d92633577.jpg?n=GTA-V_GLP-Page-Hero-1084_1920x1080.jpg"
-      }
-    ]
-  }
-]
-
 
 export default function Library() {
   const navigate = useNavigate()
