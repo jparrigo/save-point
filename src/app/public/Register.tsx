@@ -39,14 +39,12 @@ export default function Register() {
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data)
 
     instance.post("/user/register", {
       username: data.username,
       email: data.email,
       password: data.password
-    }).then((resp) => {
-      console.log(resp.data)
+    }).then(() => {
       navigate("/login")
     })
   } 
