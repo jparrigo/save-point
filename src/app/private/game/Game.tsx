@@ -54,7 +54,7 @@ export default function Game() {
       }
     }
 
-    if (id) fetchGame();
+    fetchGame();
   }, [id]);
 
   if (!game) {

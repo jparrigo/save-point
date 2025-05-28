@@ -40,12 +40,14 @@ export default function DialogAddGame({ data }: { data: GameData }) {
     const find = retData.find((item: any) => item.game.id == data.id)
     if (find) {
       setIsInWish(true)
+    } else {
+      setIsInWish(false)
     }
   }
 
   useEffect(() => {
     getWishGame()
-  },[])
+  },[data])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
