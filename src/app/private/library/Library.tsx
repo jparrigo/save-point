@@ -4,6 +4,17 @@ import NavBar from "../../../components/navbar/navbar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../../components/ui/accordion";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../../components/ui/dropdown-menu";
 import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { instance } from "../../../lib/axios";
+
+interface ListGamesType {
+  category: string,
+  list: {
+    id: string
+    title: string
+    img: string
+  }[]
+}
 
 let usersGameList = [
   {
@@ -66,14 +77,46 @@ let usersGameList = [
 
 export default function Library() {
   const navigate = useNavigate()
+  const [list, setList] = useState<ListGamesType[]>()
+
+  async function getGamesWishList() {
+    const userLocalData = localStorage.getItem("@savepoint/login")
+    const user = JSON.parse(userLocalData ? userLocalData : "")
+    const ret = await instance.get(`/wishlist/${user.id}`)
+    let newWishList = ret.data.map((item: any) => {
+      return {
+        id: item.game.id,
+        title: item.game.name,
+        img: item.game.artworks[0].replace("/t_thumb/", "/t_cover_big_2x/") 
+      }
+    })
+
+    setList([{
+      category: "📜 Wish List",
+      list: newWishList
+    }])
+  }
+
+  useEffect(() => {
+    getGamesWishList()
+  },[])
+
+  if (!list) {
+    return (
+      <main className="min-h-screen text-white bg-black flex justify-center items-center">
+        <p>Loading your game list...</p>
+      </main>
+    );
+  }
+
   return (
     <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
       <div className="pt-20">
         <section className="px-20 mt-20">
-          <Accordion type="multiple" defaultValue={[usersGameList[0].category]}>
+          <Accordion type="multiple" defaultValue={[list[0].category]}>
           {
-            usersGameList.map((item, i) => {
+            list.map((item, i) => {
               return (
                 <AccordionItem key={i} value={item.category}>
                   <AccordionTrigger>
@@ -85,7 +128,7 @@ export default function Library() {
                       item.list.map((item, i) => {
                         return (
                           <div className="flex flex-col gap-2" key={i}>
-                            <div className="w-80 h-60 max-md:w-fit cursor-pointer" onClick={() => navigate("../game")}>
+                            <div className="w-80 h-60 max-md:w-fit cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                               <img className="w-full h-full object-cover rounded-2xl" src={item.img} alt={item.title} />
                             </div>
                             <div className="flex flex-row justify-between items-center">

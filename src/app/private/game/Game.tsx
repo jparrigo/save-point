@@ -8,7 +8,7 @@ import { Button } from "../../../components/ui/button";
 import { useParams } from "react-router";
 import { instance } from "../../../lib/axios";
 
-interface GameData {
+export interface GameData {
   //score: 0;
   id: string;
   igdbId: number;
@@ -24,7 +24,6 @@ interface GameData {
 
 export default function Game() {
   const { id } = useParams<{ id: string }>()
-  console.log(id)
   const [game, setGame] = useState<GameData | null>(null);
 
   const [myReview, setMyReview] = useState({
@@ -49,8 +48,6 @@ export default function Game() {
     async function fetchGame() {
       try {
         const resp = await instance.get(`/games/game/${id}`)
-        const data = resp.data
-        console.log(data)
         setGame(resp.data);
       } catch (error) {
         console.error("Erro ao buscar jogo:", error);
@@ -58,7 +55,7 @@ export default function Game() {
     }
 
     if (id) fetchGame();
-  }, []);
+  }, [id]);
 
   if (!game) {
     return (
@@ -73,13 +70,13 @@ export default function Game() {
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
-        <GameCard image={game.artworks[0] || "/default.png"} onClick={handleAdd} />
+        <GameCard image={game.artworks[0].replace("/t_thumb/", "/t_cover_big_2x/") || "/default.png"} onClick={handleAdd} />
         <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
           <div className="flex flex-col items-start">
             <div className="flex items-start justify-between w-full">
               <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
-              <DialogAddGame />
+              <DialogAddGame data={game}/>
             </div>
             <p className="text-lg font-medium mb-2">
               <span className="opacity-70">Score:</span> 0
