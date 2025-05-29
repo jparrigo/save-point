@@ -3,6 +3,7 @@ import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
 import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; 
 import { Button } from "../../../components/ui/button";
+import DialogEditUser from "../../../components/dialog/dialog.edituser";
 
 const gamesList = [
   { title: "The Witcher 3", image: "https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg" },
@@ -43,6 +44,7 @@ const wishlist = [
 
 export default function Account() {
   const [user, setUser] = useState({
+    id: "",
     username: "",
     email: "",
     gamesCount: 87,
@@ -51,16 +53,21 @@ export default function Account() {
     friends: 100,
   });
 
-  useEffect(() => {
+  function getUserData() {
     const localData = localStorage.getItem("@savepoint/login");
     if (localData) {
       const parsed = JSON.parse(localData);
       setUser({
         ...user,
+        id: parsed.id,
         username: parsed.username,
         email: parsed.email
       });
     }
+  }
+
+  useEffect(() => {
+    getUserData()
   }, []);
 
   return (
@@ -76,6 +83,7 @@ export default function Account() {
             className="w-28 h-28 rounded-md"
           />
           <div className="flex-1">
+            <span className="text-white/60 text-sm">{user.id}</span>
             <h1 className="text-3xl font-semibold">{user.username}</h1>
             <p className="text-sm text-white/70">{user.email}</p>
             <p className="text-sm text-white/60 mt-6">
@@ -85,9 +93,7 @@ export default function Account() {
               Friends: <span className="text-white">{user.friends}</span>
             </p>
           </div>
-          <Button variant="purple">
-            Edit Profile
-          </Button>
+          <DialogEditUser userData={user} onSubmitPass={() => getUserData()}/>
         </div>
 
         {/* Popular Games */}

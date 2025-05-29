@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, CreditCard, LogOut, Menu, Search, Sparkles } from "lucide-react";
+import { BadgeCheck, Bell, CreditCard, LogOut, Menu, Search, ShieldBan, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useLocation, useNavigate } from "react-router";
@@ -106,8 +106,8 @@ export default function NavBar() {
                 <DropdownMenuSeparator/>
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <Sparkles />
-                      Upgrade to Pro
+                      <ShieldBan />
+                      Remove ads
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -115,14 +115,6 @@ export default function NavBar() {
                   <DropdownMenuItem onClick={() => navigate("/account")}> {/* Redireciona para Account */}
                     <BadgeCheck />
                     Account
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
