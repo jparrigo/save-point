@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
 import AnalyzeCard from "../../../components/gamecard/AnalyzeCard"; 
-import { Button } from "../../../components/ui/button";
 import DialogEditUser from "../../../components/dialog/dialog.edituser";
 
 const gamesList = [

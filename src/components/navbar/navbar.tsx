@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, CreditCard, LogOut, Menu, Search, ShieldBan, Sparkles } from "lucide-react";
+import { BadgeCheck, LogOut, Menu, Search, ShieldBan } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useLocation, useNavigate } from "react-router";
