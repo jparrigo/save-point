@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { instance } from "../../lib/axios";
+import { useNavigate } from "react-router";
 
 const FormSchema = z.object({
   username: z.string({
@@ -26,6 +27,7 @@ const FormSchema = z.object({
 
 
 export default function Register() {
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -37,14 +39,13 @@ export default function Register() {
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data)
 
     instance.post("/user/register", {
       username: data.username,
       email: data.email,
       password: data.password
-    }).then((resp) => {
-      console.log(resp.data)
+    }).then(() => {
+      navigate("/login")
     })
   } 
 

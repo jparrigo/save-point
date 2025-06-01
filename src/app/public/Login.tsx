@@ -26,13 +26,11 @@ export default function Login() {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data)
 
     instance.post("/user/signin", {
       email: data.email,
       password: data.password
     }).then((res) => {
-      console.log(res.data)
       localStorage.setItem("@savepoint/login", JSON.stringify({
         id: res.data.user.id,
         username: res.data.user.username,

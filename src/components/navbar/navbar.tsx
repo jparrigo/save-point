@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, CreditCard, LogOut, Menu, Search, Sparkles } from "lucide-react";
+import { BadgeCheck, LogOut, Menu, Search, ShieldBan } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useLocation, useNavigate } from "react-router";
@@ -35,17 +35,18 @@ export default function NavBar() {
 
   async function getGameList() {
     const res = await instance.get("/games")
-    console.log(res.data)
     setGames(res.data)
   }
 
   useEffect(() => {
-    getGameList()
-  },[])
+    if (search) {
+      getGameList()
+    }
+  },[search])
 
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9] z-50">
-      <h1 className="font-bold text-xl">{size.width <= 800 ? "SP" : "Save Point"}</h1>
+      <h1 onClick={() => navigate("/home")} className="font-bold text-xl cursor-pointer">{size.width <= 800 ? "SP" : "Save Point"}</h1>
       <div ref={wrapperRef} className="w-2/4 flex items-center bg-gradient-to-r from-[#1A1919] to-[#0F0F0F] border border-[#515151] rounded-[6px] px-4 py-2 gap-4 relative">
         <Search size={20}/>
         <input
@@ -57,9 +58,14 @@ export default function NavBar() {
         />
         <div className={cn((search ? "visible" : "invisible"),"absolute left-0 top-12 bg-black w-full max-h-80 overflow-y-auto bg-gradient-to-r from-[#1A1919] to-[#0F0F0F] border border-[#515151] rounded-[6px] p-4")}>
           {
+            games.length <= 0
+            ? <p>Loading games...</p>
+            : null
+          }
+          {
             games.map((item, i) => {
               return (
-                <div key={i} className="border-b border-white/20 py-2 last:border-none cursor-pointer hover:outline hover:outline-white/20 hover:bg-white/5 px-2 rounded-md" onClick={() => navigate("/game")}>
+                <div key={i} className=" my-2 border-b border-white/20 py-2 last:border-none cursor-pointer hover:outline hover:outline-white/20 hover:bg-white/5 px-2 rounded-md" onClick={() => navigate(`/game/${item.id}`)}>
                   <h1 className="">{item.name}</h1>
                   <p className="text-sm font-light text-white/30 truncate">{item.summary}</p>
                 </div>
@@ -100,8 +106,8 @@ export default function NavBar() {
                 <DropdownMenuSeparator/>
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <Sparkles />
-                      Upgrade to Pro
+                      <ShieldBan />
+                      Remove ads
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -109,14 +115,6 @@ export default function NavBar() {
                   <DropdownMenuItem onClick={() => navigate("/account")}> {/* Redireciona para Account */}
                     <BadgeCheck />
                     Account
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import DialogAddGame from "../../../components/dialog/dialog.addgame";
 import GameCard from "../../../components/gamecard/gamecard";
 import NavBar from "../../../components/navbar/navbar";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../../../components/ui/button";
+import { useParams } from "react-router";
+import { instance } from "../../../lib/axios";
 
-interface GameData {
+export interface GameData {
   //score: 0;
   id: string;
   igdbId: number;
@@ -22,7 +23,7 @@ interface GameData {
 }
 
 export default function Game() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>()
   const [game, setGame] = useState<GameData | null>(null);
 
   const [myReview, setMyReview] = useState({
@@ -46,16 +47,14 @@ export default function Game() {
   useEffect(() => {
     async function fetchGame() {
       try {
-        const response = await fetch("http://localhost:3000/games");
-        const data = await response.json();
-        const found = data.find((g: GameData) => g.id === id);
-        setGame(found);
+        const resp = await instance.get(`/games/game/${id}`)
+        setGame(resp.data);
       } catch (error) {
         console.error("Erro ao buscar jogo:", error);
       }
     }
 
-    if (id) fetchGame();
+    fetchGame();
   }, [id]);
 
   if (!game) {
@@ -65,27 +64,22 @@ export default function Game() {
       </main>
     );
   }
-//  const handleAdd = () => {
-//    console.log("Added to list");
-//  };
-
-  
 
   return (
     <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
-        <GameCard image={game.artworks[0] || "/default.png"} onClick={handleAdd} />
+        <GameCard image={game.artworks[0].replace("/t_thumb/", "/t_cover_big_2x/") || "/default.png"} onClick={handleAdd} />
         <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
           <div className="flex flex-col items-start">
             <div className="flex items-start justify-between w-full">
               <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
-              <DialogAddGame />
+              <DialogAddGame data={game}/>
             </div>
             <p className="text-lg font-medium mb-2">
-              <span className="opacity-70">Score:</span> {game.score}
+              <span className="opacity-70">Score:</span> 0
             </p>
 
             <p className="opacity-70 mb-1">About:</p>
@@ -110,7 +104,7 @@ export default function Game() {
             <div className="mt-20">
               {/* Write a Review */}
               <div className="bg-black/30 p-6 rounded-lg">
-                <h2 className="text-2xl mb-4 font-bold max-md:text-sm">Write your analysis of: <span className="font-light">{game.title}</span></h2>
+                <h2 className="text-2xl mb-4 font-bold max-md:text-sm">Write your analysis of: <span className="font-light">{game.name}</span></h2>
                 <p className="mb-6 font-light max-md:text-sm">Do you recommend this game?</p>
                 <div className="flex gap-4 mb-4">
                   <button onClick={() => setLike("like")} className={cn(
