@@ -7,6 +7,7 @@ import { cn } from "../../../lib/utils";
 import { Button } from "../../../components/ui/button";
 import { useParams } from "react-router";
 import { instance } from "../../../lib/axios";
+import { toast } from "sonner";
 
 export interface GameData {
   //score: 0;
@@ -23,9 +24,17 @@ export interface GameData {
   achievements: string[];
 }
 
+interface ReviewsType {
+  id: string
+  rating: boolean
+  reviewText: string
+  createdAt: string
+}
+
 export default function Game() {
   const { id } = useParams<{ id: string }>()
   const [game, setGame] = useState<GameData | null>(null);
+  const [reviews, setReviews] = useState<ReviewsType[]>([]);
 
   const [myReview, setMyReview] = useState({
     like: false,
@@ -41,21 +50,51 @@ export default function Game() {
     }
   }
   
-  const handleAdd = () => {
-    console.log("Added to list");
-  };
+  async function submitMyReview() {
+    if (!myReview.like && !myReview.unlike) return toast("You need to like or unlike your review!")
+    if (myReview.description.trim() == "") return toast("Write some review to send your review!")
+
+    const userLocalData = localStorage.getItem("@savepoint/login")
+    const user = JSON.parse(userLocalData ? userLocalData : "")
+    
+    await instance.post("/reviews",{
+      user: user.id,
+      game: game?.id,
+      rating: myReview.like ? true : false,
+      reviewText: myReview.description
+    }).then(() => {
+      setMyReview({
+        like: false,
+        unlike: false,
+        description: ""
+      })
+      toast("Your review was successfully send!")
+    }).catch((err) => console.log(err))
+
+  }
+
+  async function fetchGame() {
+    try {
+      const resp = await instance.get(`/games/game/${id}`)
+      setGame(resp.data);
+    } catch (error) {
+      console.error("Erro ao buscar jogo:", error);
+    }
+  }
+
+  async function getReview() {
+    try {
+      const resp = await instance.get(`/reviews/game/${id}`)
+      console.log(resp.data)
+      setReviews(resp.data)
+    } catch (error) {
+      console.error("Erro ao buscar jogo:", error);
+    }
+  }
   
   useEffect(() => {
-    async function fetchGame() {
-      try {
-        const resp = await instance.get(`/games/game/${id}`)
-        setGame(resp.data);
-      } catch (error) {
-        console.error("Erro ao buscar jogo:", error);
-      }
-    }
-
     fetchGame();
+    getReview()
   }, [id]);
 
   if (!game) {
@@ -71,7 +110,7 @@ export default function Game() {
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
-        <GameCard image={game.cover.replace("{size}", "cover_big_2x")} onClick={handleAdd} />
+        <GameCard image={game.cover.replace("{size}", "cover_big_2x")} />
         <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
           <div className="flex flex-col items-start">
@@ -127,7 +166,7 @@ export default function Game() {
                   placeholder="Write your review here"
                   className="w-full p-4 rounded-md bg-black/40 text-slate-100 h-40 mb-5 max-md:text-sm"
                 />
-                <Button variant="purple" className="dark w-full" onClick={() => console.log(myReview)}>
+                <Button variant="purple" className="dark w-full" onClick={submitMyReview}>
                   Send my review
                 </Button>
               </div>
@@ -136,41 +175,36 @@ export default function Game() {
               <hr className="my-10 border-slate-700" />
 
               {/* Users' Reviews */}
-              <div>
+              <div className="mb-6">
                 <h3 className="text-xl mb-6">Análises dos usuários:</h3>
+                {
+                  reviews.length == 0 ? <span className="text-white/40 font-light">No reviews to this game</span> : null
+                }
+                {
+                  reviews.map((item,i) => {
+                    return (
+                      <div key={i} className="flex flex-col gap-4 bg-black/30 p-6 rounded-xl mt-8">
+                        <div className="flex flex-row justify-between items-center gap-8">
+                          <span className="text-sm text-white/40">{item.id}</span>
+                          <span className="text-sm text-white/30">{item.createdAt}</span>
+                        </div>
 
-                <div className="flex flex-col md:flex-row bg-black/30 p-6 rounded-xl mt-8">
-                  {/* Perfil e Infos */}
-                  <div className="flex flex-col md:w-1/4 items-center md:items-start">
-                    <div className="flex items-center gap-3 mb-4">
-                      <img
-                        src="logo.png"
-                        alt="User Icon"
-                        className="w-12 h-12 rounded-full"
-                      />
-                      <span className="font-semibold text-lg">Username</span>
-                    </div>
-                    <p className="text-sm">Game State: Finished</p>
-                    <p className="text-sm">Achievements: Platinado (icon)</p>
-                  </div>
+                        <div className="flex flex-row items-center gap-4">
+                          User recommend this game:
+                          {
+                            item.rating ? <ThumbsUp /> : <ThumbsDown />
+                          }
+                        </div>
 
-                  {/* Análise */}
-                  <div className="flex-1 mt-4 md:mt-0 md:ml-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-row">
-                        <ThumbsUp size={24} />
-                        <span className="text-lg font-semibold">Recomendado</span>
+                        <div className="p-4 bg-black/20 rounded-md">
+                          <p className="text-sm leading-relaxed">
+                            {item.reviewText}
+                          </p>
+                        </div>
                       </div>
-                      <span className="text-xs opacity-60">Publicado em: 08/04/2025</span>
-                    </div>
-
-                    <div className="mt-6 p-4 bg-black/20 rounded-md">
-                      <p className="text-sm leading-relaxed">
-                        Lorem ipsum dolor sit amet. Vel consequatur corporis non similique fugit et...
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                    )
+                  })
+                }
               </div>
             </div>
           </div>

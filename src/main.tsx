@@ -15,6 +15,7 @@ import Library from './app/private/library/Library'
 import Game from './app/private/game/Game'
 import Account from './app/private/account/account'
 import ProtectedRoute from './components/protectedroute/ProtectedRoute'
+import { Toaster } from './components/ui/sonner'
 
 
 const router = createBrowserRouter([
@@ -60,5 +61,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router}/>
+    <Toaster className='dark'/>
   </StrictMode>,
 )
