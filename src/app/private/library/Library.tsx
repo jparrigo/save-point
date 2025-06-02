@@ -39,6 +39,19 @@ export default function Library() {
     }])
   }
 
+  async function deleteFromWishlist(gameId: string) {
+    const userLocalData = localStorage.getItem("@savepoint/login")
+    const user = JSON.parse(userLocalData ? userLocalData : "")
+    await instance.delete("/wishlist", {
+      data: {
+        gameId: gameId,
+        userId: user.id
+      }
+    }).then(() => {
+      getGamesWishList()
+    }).catch((err) => console.log(err))
+  }
+
   useEffect(() => {
     getGamesWishList()
   },[])
@@ -81,25 +94,25 @@ export default function Library() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="dark">
                                     <DropdownMenuGroup>
-                                      <DropdownMenuItem>
+                                      <DropdownMenuItem disabled>
                                         <Pencil />
                                         Edit Game
                                       </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuGroup>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem disabled>
                                       <Link />
                                       Copy Link
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem disabled>
                                       <ChartColumn />
                                       Stats
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuGroup>
-                                    <DropdownMenuItem className="bg-red-500/50">
+                                    <DropdownMenuItem onClick={() => deleteFromWishlist(item.id)} className="bg-red-500/50 cursor-pointer">
                                       <Trash2 color="white"/>
                                       Remove
                                     </DropdownMenuItem>
