@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecard";
 import { instance } from "../../../lib/axios";
+import { useNavigate } from "react-router";
 
 interface GameType {
   id: string;
@@ -17,11 +17,12 @@ export default function Home() {
   // Nova função: busca todos os jogos do banco de dados
   async function getAllGames() {
     try {
-      const response = await instance.get("/games"); // <-- ajuste essa rota conforme sua API
+      const response = await instance.get("/games");
+      console.log(response.data)
       const allGames = response.data.map((game: any) => ({
         id: game.id,
         title: game.name,
-        img: game.artworks[0]?.replace("/t_thumb/", "/t_cover_big_2x/") ?? "/fallback.jpg"
+        img: game.cover.replace("{size}", "cover_big_2x")
       }));
       setGamesList(allGames);
     } catch (error) {

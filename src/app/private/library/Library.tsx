@@ -29,7 +29,7 @@ export default function Library() {
       return {
         id: item.game.id,
         title: item.game.name,
-        img: item.game.artworks[0].replace("/t_thumb/", "/t_cover_big_2x/") 
+        img: item.game.cover.replace("{size}", "cover_big_2x") 
       }
     })
 
@@ -65,15 +65,15 @@ export default function Library() {
                       <h1 className="text-2xl">{item.category}</h1>
                       <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.list.length}</div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-row max-md:flex-col gap-8">
+                  <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-8">
                     {
                       item.list.map((item, i) => {
                         return (
-                          <div className="flex flex-col gap-2" key={i}>
+                          <div className="flex flex-col w-fit gap-2" key={i}>
                             <div className="w-80 h-60 max-md:w-fit cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                               <img className="w-full h-full object-cover rounded-2xl" src={item.img} alt={item.title} />
                             </div>
-                            <div className="flex flex-row justify-between items-center">
+                            <div className="flex flex-row max-md:flex-col justify-between items-center">
                               <h1 className="text-lg font-light">{item.title}</h1>
                               <DropdownMenu>
                                 <DropdownMenuTrigger>
