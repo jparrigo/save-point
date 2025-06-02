@@ -3,25 +3,16 @@ import { useNavigate } from "react-router";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { instance } from "../../lib/axios";
 
 export default function ForgotPsw() {
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
 
   const handleSendEmail = async () => {
     try {
-      const response = await fetch("http://localhost:3000/user/forgotpass", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao enviar o e-mail");
-      }
+      await instance.post("user/forgotpass",{
+        email: email
+      })
 
       alert("Email enviado com sucesso! Verifique sua caixa de entrada.");
     } catch (error: any) {

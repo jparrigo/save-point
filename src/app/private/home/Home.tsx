@@ -18,7 +18,6 @@ export default function Home() {
   async function getAllGames() {
     try {
       const response = await instance.get("/games");
-      console.log(response.data)
       const allGames = response.data.map((game: any) => ({
         id: game.id,
         title: game.name,

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import { useNavigate, useSearchParams } from "react-router";
+import { instance } from "../../lib/axios";
 
 export default function ForgotPsw2() {
   const [searchParams] = useSearchParams();
@@ -16,21 +17,15 @@ export default function ForgotPsw2() {
     if (password !== repeat) return alert("As senhas não coincidem.");
 
     try {
-      const response = await fetch(`http://localhost:3000/user/recoverpass/${token}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ newPassword: password }),
-      });
+      const resp = await instance.post(`/user/recoverpass/${token}`,{
+        newPassword: password
+      })
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao redefinir a senha");
+      if(resp.data) {
+        alert("Senha alterada com sucesso!");
+        navigate("/login");
       }
 
-      alert("Senha alterada com sucesso!");
-      navigate("/login");
     } catch (error: any) {
       alert("Erro ao redefinir senha: " + error.message);
     }
