@@ -15,6 +15,7 @@ export interface GameData {
   name: string;
   summary: string;
   genres: string[];
+  cover: string;
   platforms: string[];
   companies: string[];
   artworks: string[];
@@ -70,7 +71,7 @@ export default function Game() {
       <NavBar />
       <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
         {/* GameCard */}
-        <GameCard image={game.artworks[0].replace("/t_thumb/", "/t_cover_big_2x/") || "/default.png"} onClick={handleAdd} />
+        <GameCard image={game.cover.replace("{size}", "cover_big_2x")} onClick={handleAdd} />
         <div className="w-full col-start-2 col-end-5">
           {/* Info content */}
           <div className="flex flex-col items-start">
