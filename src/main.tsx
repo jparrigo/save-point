@@ -14,6 +14,7 @@ import Home from './app/private/home/Home'
 import Library from './app/private/library/Library'
 import Game from './app/private/game/Game'
 import Account from './app/private/account/account'
+import Chat from './app/private/chat/Chat'
 import ProtectedRoute from './components/protectedroute/ProtectedRoute'
 import { Toaster } from './components/ui/sonner'
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/account",
     element: <ProtectedRoute><Account /></ProtectedRoute>
+  },
+  {
+    path: "/chat",
+    element: <ProtectedRoute><Chat /></ProtectedRoute>
   }
   
 ])
