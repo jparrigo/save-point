@@ -1,14 +1,13 @@
-import { BadgeCheck, LogOut, Menu, Search, ShieldBan } from "lucide-react";
+import { BadgeCheck, LogOut, Menu, ShieldBan } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useLocation, useNavigate } from "react-router";
 import useScreenSize from "../../lib/useScreenSize";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Separator } from "../ui/separator";
-import { cn } from "../../lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { instance } from "../../lib/axios";
-import { useClickOutside } from "../../lib/useClickOutside";
+import SearchBar from "../search-bar/search-bar";
 
 export default function NavBar() {
   const navigate = useNavigate()
@@ -22,11 +21,6 @@ export default function NavBar() {
     name: string
     summary: string
   }[]>([])
-
-  const wrapperRef = useRef<any>("searchmenu")
-  useClickOutside(wrapperRef, () => {
-    setSearch(false)
-  })
 
   function logOut() {
     localStorage.clear()
@@ -47,34 +41,7 @@ export default function NavBar() {
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9] z-50">
       <h1 onClick={() => navigate("/home")} className="font-bold text-xl cursor-pointer">{size.width <= 800 ? "SP" : "Save Point"}</h1>
-      <div ref={wrapperRef} className="w-2/4 flex items-center bg-gradient-to-r from-[#1A1919] to-[#0F0F0F] border border-[#515151] rounded-[6px] px-4 py-2 gap-4 relative">
-        <Search size={20}/>
-        <input
-          onFocus={() => setSearch(true)}
-          className="w-full focus:outline-none text-white text-sm placeholder:text-[#515151]" 
-          id="input" 
-          type="text" 
-          placeholder={size.width <= 800 ? "Search here" : "Search for a game"}
-        />
-        <div className={cn((search ? "visible" : "invisible"),"absolute left-0 top-12 bg-black w-full max-h-80 overflow-y-auto bg-gradient-to-r from-[#1A1919] to-[#0F0F0F] border border-[#515151] rounded-[6px] p-4")}>
-          {
-            games.length <= 0
-            ? <p>Loading games...</p>
-            : null
-          }
-          {
-            games.map((item, i) => {
-              return (
-                <div key={i} className=" my-2 border-b border-white/20 py-2 last:border-none cursor-pointer hover:outline hover:outline-white/20 hover:bg-white/5 px-2 rounded-md" onClick={() => navigate(`/game/${item.id}`)}>
-                  <h1 className="">{item.name}</h1>
-                  <p className="text-sm font-light text-white/30 truncate">{item.summary}</p>
-                </div>
-              )
-            })
-          }
-        </div>
-        
-      </div>
+      <SearchBar games={games} setOpenSearch={(value) => setSearch(value)} />
       {
         size.width >= 800
         ? (

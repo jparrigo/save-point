@@ -68,9 +68,12 @@ export default function Game() {
         unlike: false,
         description: ""
       })
-      toast("Your review was successfully send!")
-    }).catch((err) => console.log(err))
-
+      getReview()
+      toast.success("Your review was successfully send!")
+    }).catch((err) => {
+      toast.error("Error to create your review!")
+      console.error(err);
+    })
   }
 
   async function fetchGame() {
@@ -116,7 +119,7 @@ export default function Game() {
           <div className="flex flex-col items-start">
             <div className="flex items-start justify-between w-full">
               <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
-              <DialogAddGame data={game}/>
+              <DialogAddGame data={game} />
             </div>
             <p className="text-lg font-medium mb-2">
               <span className="opacity-70">Score:</span> 0
