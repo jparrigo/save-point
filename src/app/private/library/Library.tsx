@@ -1,5 +1,5 @@
 
-import { ChartColumn, CirclePlus, Ellipsis, Link, Move, Pencil, Trash2 } from "lucide-react";
+import { ChartColumn, CirclePlus, Ellipsis, Link, Move, Trash2 } from "lucide-react";
 import NavBar from "../../../components/navbar/navbar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../../components/ui/accordion";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../../components/ui/dropdown-menu";

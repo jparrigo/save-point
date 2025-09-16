@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import {
-  ArrowUpRightIcon,
   SearchIcon,
 } from "lucide-react"
 
