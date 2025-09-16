@@ -1,11 +1,15 @@
 
-import { ChartColumn, Ellipsis, Link, Pencil, Trash2 } from "lucide-react";
+import { ChartColumn, CirclePlus, Ellipsis, Link, Move, Trash2 } from "lucide-react";
 import NavBar from "../../../components/navbar/navbar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../../components/ui/accordion";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../../../components/ui/dropdown-menu";
 import { useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { instance } from "../../../lib/axios";
+import { Button } from "../../../components/ui/button";
+import ModalCreateLibrary from "./modal/modal.create-library";
+import ModalMoveGame from "./modal/modal.move-game";
+import AlertComponent from "../../../components/alert/alert";
 
 interface ListGamesType {
   category: string,
@@ -20,6 +24,10 @@ interface ListGamesType {
 export default function Library() {
   const navigate = useNavigate()
   const [list, setList] = useState<ListGamesType[]>()
+  const [openModalCreateLibrary, setOpenModalCreateLibrary] = useState(false)
+  const [openModalMoveGame, setOpenModalMoveGame] = useState(false)
+  const [openAlertRemoveGame, setOpenAlertRemoveGame] = useState(false)
+  const removeGameId = useRef("")
 
   async function getGamesWishList() {
     const userLocalData = localStorage.getItem("@savepoint/login")
@@ -33,15 +41,22 @@ export default function Library() {
       }
     })
 
-    setList([{
-      category: "📜 Wish List",
-      list: newWishList
-    }])
+    setList([
+      {
+        category: "📜 Wish List",
+        list: newWishList
+      },
+      {
+        category: "Minha Lista",
+        list: []
+      }
+    ])
   }
 
   async function deleteFromWishlist(gameId: string) {
     const userLocalData = localStorage.getItem("@savepoint/login")
     const user = JSON.parse(userLocalData ? userLocalData : "")
+
     await instance.delete("/wishlist", {
       data: {
         gameId: gameId,
@@ -67,6 +82,19 @@ export default function Library() {
   return (
     <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
+      <ModalCreateLibrary open={openModalCreateLibrary} onOpenChange={setOpenModalCreateLibrary} />
+      <AlertComponent
+        open={openAlertRemoveGame}
+        onOpenChange={setOpenAlertRemoveGame}
+        title="Are you sure you want do remove this game?"
+        description="This action will remove this game to your library."
+        actionLabel="Remove"
+        callback={() => deleteFromWishlist(removeGameId.current)}
+      />
+      <ModalMoveGame open={openModalMoveGame} onOpenChange={setOpenModalMoveGame} />
+      <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed bottom-10 right-10">
+        <CirclePlus /> Create library
+      </Button>
       <div className="pt-20">
         <section className="px-20 mt-20">
           <Accordion type="multiple" defaultValue={[list[0].category]}>
@@ -93,10 +121,10 @@ export default function Library() {
                                   <Ellipsis className="cursor-pointer"/>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="dark">
-                                    <DropdownMenuGroup>
-                                      <DropdownMenuItem disabled>
-                                        <Pencil />
-                                        Edit Game
+                                  <DropdownMenuGroup onClick={() => setOpenModalMoveGame(true)}>
+                                    <DropdownMenuItem>
+                                      <Move />
+                                      Move Game
                                       </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
@@ -111,8 +139,11 @@ export default function Library() {
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={() => deleteFromWishlist(item.id)} className="bg-red-500/50 cursor-pointer">
+                                  <DropdownMenuGroup onClick={() => {
+                                    removeGameId.current = item.id
+                                    setOpenAlertRemoveGame(true)
+                                  }}>
+                                    <DropdownMenuItem className="bg-red-500/50 cursor-pointer">
                                       <Trash2 color="white"/>
                                       Remove
                                     </DropdownMenuItem>
