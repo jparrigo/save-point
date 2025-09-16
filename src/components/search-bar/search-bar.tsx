@@ -8,11 +8,14 @@ import {
 
 import {
   CommandDialog,
+  CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "../../components/ui/command"
 import { useNavigate } from "react-router"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 interface SearchBarProps {
   setOpenSearch: (value: boolean) => void
@@ -20,6 +23,7 @@ interface SearchBarProps {
     id: string
     name: string
     summary: string
+    cover: string
   }[]
 }
 
@@ -56,39 +60,47 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
             className="text-muted-foreground/80 -ms-1 me-3"
             size={16}
           />
-          <span className="text-muted-foreground/70 font-normal">Search</span>
+          <span className="text-muted-foreground/70 font-normal">Search for game or user...</span>
         </span>
         <kbd className="bg-background text-muted-foreground/70 ms-12 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
           ⌘K
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search for a game..." />
+        <CommandInput placeholder="Search for a game or user..." />
         <CommandList>
-          {
-            games.map((item) => {
-              return (
-                <CommandItem onSelect={() => {
-                  navigate(`/game/${item.id}`)
-                  setOpen(false)
-                }
-                }
-                  key={item.id}
-                >
-                  <div className="flex flex-row items-center">
-                    <ArrowUpRightIcon
-                      size={16}
-                      className="opacity-60"
-                    />
-                    <div>
-                      <h1>{item.name}</h1>
-                      <p className="text-sm font-light text-white/30 truncate">{item.summary}</p>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Games">
+            {
+              games.map((item) => {
+                return (
+                  <CommandItem onSelect={() => {
+                    navigate(`/game/${item.id}`)
+                    setOpen(false)
+                  }
+                  }
+                    key={item.id}
+                  >
+                    <div className="flex flex-row items-center gap-4">
+                      <Avatar>
+                        <AvatarImage src={item.cover.replace("{size}", "cover_big_2x")} alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h1>{item.name}</h1>
+                        <p className="text-sm font-light w-100 text-white/30 truncate">{item.summary}</p>
+                      </div>
                     </div>
-                  </div>
-                </CommandItem>
-              )
-            })
-          }
+                  </CommandItem>
+                )
+              })
+            }
+          </CommandGroup>
+          <CommandGroup heading="Users">
+            <CommandItem>
+              <span>Admin</span>
+            </CommandItem>
+          </CommandGroup>
         </CommandList>
       </CommandDialog>
     </>

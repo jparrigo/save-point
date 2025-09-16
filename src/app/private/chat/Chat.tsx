@@ -50,7 +50,6 @@ export default function Chat() {
       <NavBar />
 
       <div className="flex h-[90vh] px-10 py-10">
-        /* Lista de chats */
         <aside className="w-1/5 bg-black/50 rounded-2xl p-4 flex flex-col">
           <h2 className="text-xl font-bold mb-10">My Chats</h2>
           <div className="flex flex-col gap-5 overflow-y-auto">
@@ -72,7 +71,6 @@ export default function Chat() {
           </div>
         </aside>
 
-        /* Chat atual */
         <section className="flex-1 flex flex-col bg-black/50 rounded-2xl ml-6 px-6 py-8">
           <div className="flex-1 overflow-y-auto flex flex-col gap-3">
             {messages.map((msg) => (
@@ -89,7 +87,6 @@ export default function Chat() {
             ))}
           </div>
 
-          /* Input */
           <div className="mt-4 flex gap-2">
             <input
               type="text"

@@ -20,6 +20,7 @@ export default function NavBar() {
     id: string
     name: string
     summary: string
+    cover: string
   }[]>([])
 
   function logOut() {
@@ -29,6 +30,7 @@ export default function NavBar() {
 
   async function getGameList() {
     const res = await instance.get("/games")
+
     setGames(res.data)
   }
 
