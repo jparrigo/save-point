@@ -28,8 +28,10 @@ export default function DialogAddGame({ data }: { data: GameData }) {
     }).then(() => {
       setOpen(false)
       setCategory("")
-      getWishGame()
+      setIsInWish(true)
     })
+
+    getWishGame()
   }
 
   async function getWishGame() {

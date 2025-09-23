@@ -10,8 +10,9 @@ import { Button } from "../../../components/ui/button";
 import ModalCreateLibrary from "./modal/modal.create-library";
 import ModalMoveGame from "./modal/modal.move-game";
 import AlertComponent from "../../../components/alert/alert";
+import { getLocalUserData } from "../../../lib/getLocalUserData";
 
-interface ListGamesType {
+export interface ListGamesType {
   category: string,
   list: {
     id: string
@@ -30,9 +31,8 @@ export default function Library() {
   const removeGameId = useRef("")
 
   async function getGamesWishList() {
-    const userLocalData = localStorage.getItem("@savepoint/login")
-    const user = JSON.parse(userLocalData ? userLocalData : "")
-    const ret = await instance.get(`/wishlist/${user.id}`)
+    const user = getLocalUserData()
+    const ret = await instance.get(`/wishlist/${user?.id}`)
     let newWishList = ret.data.map((item: any) => {
       return {
         id: item.game.id,
@@ -45,10 +45,6 @@ export default function Library() {
       {
         category: "📜 Wish List",
         list: newWishList
-      },
-      {
-        category: "Minha Lista",
-        list: []
       }
     ])
   }

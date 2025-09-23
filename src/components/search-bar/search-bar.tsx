@@ -15,6 +15,7 @@ import {
 } from "../../components/ui/command"
 import { useNavigate } from "react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { UserList } from "../navbar/navbar"
 
 interface SearchBarProps {
   setOpenSearch: (value: boolean) => void
@@ -24,9 +25,10 @@ interface SearchBarProps {
     summary: string
     cover: string
   }[]
+  user: UserList[]
 }
 
-export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
+export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps) {
   const [open, setOpen] = React.useState(false)
   const navigate = useNavigate()
 
@@ -76,8 +78,7 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
                   <CommandItem onSelect={() => {
                     navigate(`/game/${item.id}`)
                     setOpen(false)
-                  }
-                  }
+                  }}
                     key={item.id}
                   >
                     <div className="flex flex-row items-center gap-4">
@@ -96,9 +97,18 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
             }
           </CommandGroup>
           <CommandGroup heading="Users">
-            <CommandItem>
-              <span>Admin</span>
-            </CommandItem>
+            {
+              user.map((item) => {
+                return (
+                  <CommandItem onSelect={() => {
+                    navigate(`/account/${item.id}`)
+                    setOpen(false)
+                  }} key={item.id}>
+                    <span>{item.username}</span>
+                  </CommandItem>
+                )
+              })
+            }
           </CommandGroup>
         </CommandList>
       </CommandDialog>
