@@ -8,13 +8,20 @@ import { Separator } from "../ui/separator";
 import { useEffect, useState } from "react";
 import { instance } from "../../lib/axios";
 import SearchBar from "../search-bar/search-bar";
+import { getLocalUserData } from "../../lib/getLocalUserData";
+
+export interface UserList {
+  createdAt: string
+  email: string
+  id: string
+  username: string
+}
 
 export default function NavBar() {
   const navigate = useNavigate()
   const size = useScreenSize()
   const location = useLocation().pathname
-  const userLocalData = localStorage.getItem("@savepoint/login")
-  const user = JSON.parse(userLocalData ? userLocalData : "")
+  const user = getLocalUserData()
   const [search, setSearch] = useState(false)
   const [games, setGames] = useState<{
     id: string
@@ -22,6 +29,7 @@ export default function NavBar() {
     summary: string
     cover: string
   }[]>([])
+  const [users, setUsers] = useState<UserList[]>([])
 
   function logOut() {
     localStorage.clear()
@@ -34,28 +42,38 @@ export default function NavBar() {
     setGames(res.data)
   }
 
+  async function getUsersList() {
+    const res = await instance.get("/user")
+    console.log(res.data);
+
+    setUsers(res.data)
+
+  }
+
   useEffect(() => {
     if (search) {
       getGameList()
+      getUsersList()
     }
   },[search])
 
   return (
     <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9] z-50">
       <h1 onClick={() => navigate("/home")} className="font-bold text-xl cursor-pointer">{size.width <= 800 ? "SP" : "Save Point"}</h1>
-      <SearchBar games={games} setOpenSearch={(value) => setSearch(value)} />
+      <SearchBar user={users} games={games} setOpenSearch={(value) => setSearch(value)} />
       {
         size.width >= 800
         ? (
           <div className="flex flex-row items-center gap-6">
             <a className={location == "/home" ? "text-white" : "text-white/40"} href="/home">Home</a>
             <a className={location == "/library" ? "text-white" : "text-white/40"} href="/library">Library</a>
+              <a className={location == "/chat" ? "text-white" : "text-white/40"} href="/chat">Chat</a>
             <a className={location == "/forum" ? "text-white" : "text-white/40"} href="">Forum</a>
             
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src="src/assets/profile.jpg" />
+                    <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" />
                   <AvatarFallback>SP</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
@@ -63,28 +81,26 @@ export default function NavBar() {
                 <DropdownMenuLabel>
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src="src/assets/profile.jpg" alt="shadcn" />
+                        <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" alt="shadcn" />
                       <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user.username}</span>
-                      <span className="truncate text-xs">{user.email}</span>
+                        <span className="truncate font-semibold">{user?.username}</span>
+                        <span className="truncate text-xs">{user?.email}</span>
                     </div>
                   </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator/>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => navigate(`/account/${user?.id}`)}> {/* Redireciona para Account */}
+                      <BadgeCheck />
+                      Account
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <ShieldBan />
                       Remove ads
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => navigate("/account")}> {/* Redireciona para Account */}
-                    <BadgeCheck />
-                    Account
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logOut}>
@@ -105,15 +121,15 @@ export default function NavBar() {
               <section className="flex flex-col gap-6">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src="src/assets/profile.jpg" alt="shadcn" />
+                      <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" alt="shadcn" />
                     <AvatarFallback className="rounded-lg">SP</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user.username}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                      <span className="truncate font-semibold">{user?.username}</span>
+                      <span className="truncate text-xs">{user?.email}</span>
                   </div>
                 </div>
-                <a className={location == "/account" ? "text-white" : "text-white/40"} href="/account">Account</a>
+                  <a className={location == "/account" ? "text-white" : "text-white/40"} href={`/account/${user?.id}`}>Account</a>
                 <Separator />
                 <a className={location == "/home" ? "text-white" : "text-white/40"} href="/home">Home</a>
                 <a className={location == "/library" ? "text-white" : "text-white/40"} href="/library">Library</a>

@@ -53,7 +53,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><Game /></ProtectedRoute>
   },
   {
-    path: "/account",
+    path: "/account/:id",
     element: <ProtectedRoute><Account /></ProtectedRoute>
   },
   {
