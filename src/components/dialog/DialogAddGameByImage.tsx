@@ -26,7 +26,6 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
     name: "The Legend of Zelda",
   };
 
-  // Garante parada da câmera ao desmontar o componente
   useEffect(() => {
     return () => {
       stopCamera();
@@ -55,21 +54,17 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
       if (videoRef.current) {
-        // garantia: video element muted para permitir autoplay
         videoRef.current.muted = true;
         videoRef.current.playsInline = true;
         videoRef.current.srcObject = stream;
-        // tentar tocar (pode rejeitar em alguns browsers se não estiver muted)
         try {
           await videoRef.current.play();
         } catch (err) {
-          // Não interrompe lógica, apenas log
           console.warn("Não foi possível dar play no vídeo automaticamente:", err);
         }
       }
     } catch (err) {
       console.error("Erro ao acessar câmera", err);
-      // se erro de permissão, garantir que state reflita
       setCameraActive(false);
     }
   };
@@ -102,7 +97,6 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
             const file = new File([blob], "captured-image.png", { type: "image/png" });
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(blob));
-            // fecha câmera após tirar foto (como no comportamento original)
             setCameraActive(false);
             stopCamera();
           }
@@ -117,7 +111,6 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
     const f = e.target.files?.[0] ?? null;
     setSelectedFile(f);
 
-    // quando trocar para arquivo, parar a câmera
     stopCamera();
     setCameraActive(false);
 
@@ -133,24 +126,19 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
   };
 
   const handleCameraClick = () => {
-    // limpa preview anterior e inicia câmera
     if (previewUrl) {
-      // revoga URL criada por URL.createObjectURL() se necessário
       try {
-        // somente se for um object URL (heurística simples)
         if (previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
       } catch {}
     }
     setPreviewUrl(null);
     setSelectedFile(null);
 
-    // garante que qualquer stream anterior seja parado antes de ligar
     stopCamera();
     setCameraActive(true);
   };
 
   const handleFileClick = () => {
-    // limpa estado de camera e preview para abrir seletor de arquivo
     stopCamera();
     setCameraActive(false);
     setPreviewUrl(null);
@@ -201,7 +189,6 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
 
             <div className="relative flex-1 w-full bg-gray-900 rounded-lg mb-3 flex justify-center items-center overflow-hidden">
               {cameraActive ? (
-                // ATRIBUTOS ADICIONADOS: autoPlay muted playsInline
                 <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
               ) : previewUrl ? (
                 <img src={previewUrl} alt="Preview" className="max-w-[90%] max-h-[90%] object-contain" />
