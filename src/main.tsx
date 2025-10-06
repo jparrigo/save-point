@@ -17,6 +17,7 @@ import Account from './app/private/account/account'
 import Chat from './app/private/chat/Chat'
 import Topic from './app/private/forum/Topic'
 import Forum from './app/private/forum/Forum'
+import Camtest from './app/private/camtest/camtest'
 import ProtectedRoute from './components/protectedroute/ProtectedRoute'
 import { Toaster } from './components/ui/sonner'
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
   {
     path: "/forum",
     element: <Forum />
+  },
+  {
+    path: "/camtest",
+    element: <Camtest />
   }
   
 ])
