@@ -63,7 +63,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><Chat /></ProtectedRoute>
   },
   {
-    path: "/topic",
+    path: "/topic/:id",
     element: <Topic />
   },
   {

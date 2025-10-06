@@ -53,7 +53,7 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
   return (
     <>
       <button
-        className="w-1/3 dark border-input bg-background text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+        className="w-1/3 dark border-input text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
         onClick={() => setOpen(true)}
       >
         <span className="flex grow items-center">
