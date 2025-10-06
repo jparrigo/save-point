@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
-import GameCard from "../../../components/gamecard/gamecard";
 import { instance } from "../../../lib/axios";
 import { useNavigate } from "react-router";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../../components/ui/carousel";
+import Footer from "../../../components/footer/footer";
+import Autoplay from "embla-carousel-autoplay";
 
 interface GameType {
   id: string;
@@ -45,26 +47,80 @@ export default function Home() {
   return (
     <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
-      <div className="flex justify-center py-24 flex-col items-center px-40">
-        
-        <h1 className="text-3xl font-bold text-white w-full text-left pl-8">Popular Games</h1>
-        <div className="w-full flex gap-20 overflow-x-auto scrollbar-transparent mt-4 pb-2">
-          {gamesList.map((game, i) => (
-            <div key={i} onClick={() => navigate(`/game/${game.id}`)} className="cursor-pointer">
-              <GameCard image={game.img} />
-            </div>
-          ))}
+      <section className="flex flex-col pt-30 px-30">
+        <h1 className="mb-4 mt-8 text-xl">You might also like</h1>
+        <Carousel
+          className="w-full dark mb-12"
+          plugins={[
+            Autoplay({
+              delay: 2000, // Adjust the delay in milliseconds
+              stopOnInteraction: true, // Stop autoplay on user interaction
+              stopOnLastSnap: false, // Continue looping after reaching the last slide
+            }),
+          ]}
+        >
+          <CarouselContent>
+            {gamesList.map((item, index) => (
+              <CarouselItem key={index} className="basis-1/6 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                <img className="rounded-xl border border-[#343434]" src={item.img} alt="" />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="flex flex-col gap-4">
+            <h1>Coming soon</h1>
+            {
+              gamesList.map((item) => {
+                return (
+                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                    <img className="w-16 h-20" src={item.img} alt="" />
+                    <div className="flex flex-col">
+                      <h1>{item.title}</h1>
+                      <p>Oct 6</p>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="flex flex-col gap-4">
+            <h1>Recently anticipated</h1>
+            {
+              gamesList.map((item) => {
+                return (
+                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                    <img className="w-16 h-20" src={item.img} alt="" />
+                    <div className="flex flex-col">
+                      <h1>{item.title}</h1>
+                      <p>Oct 6</p>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="flex flex-col gap-4">
+            <h1>Sleeper hits</h1>
+            {
+              gamesList.map((item) => {
+                return (
+                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                    <img className="w-16 h-20" src={item.img} alt="" />
+                    <div className="flex flex-col">
+                      <h1>{item.title}</h1>
+                      <p>Avg 5.0</p>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
-
-        <h1 className="text-3xl font-bold text-white w-full text-left pl-8 mt-12">Games Suggestions</h1>
-        <div className="w-full flex gap-20 overflow-x-auto scrollbar-transparent mt-4 pb-2">
-          {gamesList.map((game, i) => (
-            <div key={i} onClick={() => navigate(`/game/${game.id}`)} className="cursor-pointer">
-              <GameCard image={game.img} />
-            </div>
-          ))}
-        </div>
-      </div>
+      </section>
+      <Footer />
     </main>
   );
 }
