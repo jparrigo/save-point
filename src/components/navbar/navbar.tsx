@@ -68,7 +68,7 @@ export default function NavBar() {
             <a className={location == "/home" ? "text-white" : "text-white/40"} href="/home">Home</a>
             <a className={location == "/library" ? "text-white" : "text-white/40"} href="/library">Library</a>
               <a className={location == "/chat" ? "text-white" : "text-white/40"} href="/chat">Chat</a>
-            <a className={location == "/forum" ? "text-white" : "text-white/40"} href="">Forum</a>
+              <a className={location == "/forum" ? "text-white" : "text-white/40"} href="/forum">Forum</a>
             
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -133,7 +133,7 @@ export default function NavBar() {
                 <Separator />
                 <a className={location == "/home" ? "text-white" : "text-white/40"} href="/home">Home</a>
                 <a className={location == "/library" ? "text-white" : "text-white/40"} href="/library">Library</a>
-                <a className={location == "/forum" ? "text-white" : "text-white/40"} href="">Forum</a>
+                  <a className={location == "/forum" ? "text-white" : "text-white/40"} href="/forum">Forum</a>
               </section>
             </SheetContent>
           </Sheet>

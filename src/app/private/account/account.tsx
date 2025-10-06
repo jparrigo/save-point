@@ -114,10 +114,10 @@ export default function Account() {
         open={openModalListOfFriends}
         onOpenChange={setOpenModalListOfFriends}
       />
-      <div className="flex flex-col items-center px-8 pt-40">
+      <div className="flex flex-col items-center mx-50 mt-40 bg-[#151515] border-[#252525] border rounded-2xl">
 
         {/* Profile Header */}
-        <div className="bg-black/30 rounded-xl p-6 mb-10 w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start gap-6">
+        <div className="bg-black/10 rounded-xl p-6 mb-10 w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start gap-6">
           <img
             src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg"
             alt="Profile"
@@ -132,7 +132,7 @@ export default function Account() {
               Friends: <span className="text-white">{user.friends}</span>
             </p>
           </div>
-          <Button variant="default" onClick={() => setOpenModalListOfFriends(true)}>
+          <Button onClick={() => setOpenModalListOfFriends(true)}>
             List of friends
           </Button>
           {

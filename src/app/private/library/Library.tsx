@@ -106,11 +106,11 @@ export default function Library() {
                     {
                       item.list.map((item, i) => {
                         return (
-                          <div className="flex flex-col w-fit gap-2" key={i}>
+                          <div className="flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border pb-4 rounded-2xl" key={i}>
                             <div className="w-80 h-60 max-md:w-fit cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                               <img className="w-full h-full object-cover rounded-2xl" src={item.img} alt={item.title} />
                             </div>
-                            <div className="flex flex-row max-md:flex-col justify-between items-center">
+                            <div className="flex flex-row max-md:flex-col justify-between items-center px-4">
                               <h1 className="text-lg font-light">{item.title}</h1>
                               <DropdownMenu>
                                 <DropdownMenuTrigger>
