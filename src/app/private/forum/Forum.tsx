@@ -43,7 +43,7 @@ export default function Forum() {
     },
   ];
 
-  const [topics, setTopics] = useState<ForumTopic[]>(mockTopics);
+  const [topics] = useState<ForumTopic[]>(mockTopics);
   const [selectedTopic, setSelectedTopic] = useState<ForumTopic | null>(
     topics[0]
   );

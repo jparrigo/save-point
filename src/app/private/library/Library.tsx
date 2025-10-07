@@ -10,8 +10,9 @@ import { Button } from "../../../components/ui/button";
 import ModalCreateLibrary from "./modal/modal.create-library";
 import ModalMoveGame from "./modal/modal.move-game";
 import AlertComponent from "../../../components/alert/alert";
+import { getLocalUserData } from "../../../lib/getLocalUserData";
 
-interface ListGamesType {
+export interface ListGamesType {
   category: string,
   list: {
     id: string
@@ -30,9 +31,8 @@ export default function Library() {
   const removeGameId = useRef("")
 
   async function getGamesWishList() {
-    const userLocalData = localStorage.getItem("@savepoint/login")
-    const user = JSON.parse(userLocalData ? userLocalData : "")
-    const ret = await instance.get(`/wishlist/${user.id}`)
+    const user = getLocalUserData()
+    const ret = await instance.get(`/wishlist/${user?.id}`)
     let newWishList = ret.data.map((item: any) => {
       return {
         id: item.game.id,
@@ -45,10 +45,6 @@ export default function Library() {
       {
         category: "📜 Wish List",
         list: newWishList
-      },
-      {
-        category: "Minha Lista",
-        list: []
       }
     ])
   }
@@ -106,27 +102,40 @@ export default function Library() {
                       <h1 className="text-2xl">{item.category}</h1>
                       <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.list.length}</div>
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-8">
+                  <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
                     {
                       item.list.map((item, i) => {
                         return (
-                          <div className="flex flex-col w-fit gap-2" key={i}>
-                            <div className="w-80 h-60 max-md:w-fit cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
-                              <img className="w-full h-full object-cover rounded-2xl" src={item.img} alt={item.title} />
+                          <div
+                            className="relative flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border rounded-2xl group"
+                            key={i}
+                          >
+                            <div
+                              className="w-40 h-50 max-md:w-fit cursor-pointer relative overflow-hidden"
+                              onClick={() => navigate(`/game/${item.id}`)}
+                            >
+                              <img
+                                className="w-full h-full object-cover rounded-2xl"
+                                src={item.img}
+                                alt={item.title}
+                              />
+
+                              {/* Nome do jogo que aparece no hover */}
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl">
+                                <h1 className="text-white text-center text-lg font-semibold">{item.title}</h1>
+                              </div>
                             </div>
-                            <div className="flex flex-row max-md:flex-col justify-between items-center">
-                              <h1 className="text-lg font-light">{item.title}</h1>
                               <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                  <Ellipsis className="cursor-pointer"/>
+                              <DropdownMenuTrigger className="absolute right-4 top-4 bg-black/80 rounded-md p-1">
+                                <Ellipsis className="cursor-pointer" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="dark">
                                   <DropdownMenuGroup onClick={() => setOpenModalMoveGame(true)}>
                                     <DropdownMenuItem>
                                       <Move />
                                       Move Game
-                                      </DropdownMenuItem>
-                                    </DropdownMenuGroup>
+                                  </DropdownMenuItem>
+                                </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuGroup>
                                     <DropdownMenuItem disabled>
@@ -139,18 +148,19 @@ export default function Library() {
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuGroup onClick={() => {
-                                    removeGameId.current = item.id
-                                    setOpenAlertRemoveGame(true)
-                                  }}>
+                                <DropdownMenuGroup
+                                  onClick={() => {
+                                    removeGameId.current = item.id;
+                                    setOpenAlertRemoveGame(true);
+                                  }}
+                                >
                                     <DropdownMenuItem className="bg-red-500/50 cursor-pointer">
-                                      <Trash2 color="white"/>
+                                    <Trash2 color="white" />
                                       Remove
                                     </DropdownMenuItem>
                                   </DropdownMenuGroup>
                                 </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
+                            </DropdownMenu>
                           </div>
                         )
                       })

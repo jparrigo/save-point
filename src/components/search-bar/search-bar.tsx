@@ -15,6 +15,7 @@ import {
 } from "../../components/ui/command"
 import { useNavigate } from "react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import { UserList } from "../navbar/navbar"
 
 interface SearchBarProps {
   setOpenSearch: (value: boolean) => void
@@ -24,9 +25,10 @@ interface SearchBarProps {
     summary: string
     cover: string
   }[]
+  user: UserList[]
 }
 
-export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
+export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps) {
   const [open, setOpen] = React.useState(false)
   const navigate = useNavigate()
 
@@ -51,7 +53,7 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
   return (
     <>
       <button
-        className="w-1/3 dark border-input bg-background text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+        className="w-1/3 dark border-input text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
         onClick={() => setOpen(true)}
       >
         <span className="flex grow items-center">
@@ -76,8 +78,7 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
                   <CommandItem onSelect={() => {
                     navigate(`/game/${item.id}`)
                     setOpen(false)
-                  }
-                  }
+                  }}
                     key={item.id}
                   >
                     <div className="flex flex-row items-center gap-4">
@@ -96,9 +97,18 @@ export default function SearchBar({ games, setOpenSearch }: SearchBarProps) {
             }
           </CommandGroup>
           <CommandGroup heading="Users">
-            <CommandItem>
-              <span>Admin</span>
-            </CommandItem>
+            {
+              user.map((item) => {
+                return (
+                  <CommandItem onSelect={() => {
+                    navigate(`/account/${item.id}`)
+                    setOpen(false)
+                  }} key={item.id}>
+                    <span>{item.username}</span>
+                  </CommandItem>
+                )
+              })
+            }
           </CommandGroup>
         </CommandList>
       </CommandDialog>

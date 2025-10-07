@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><Game /></ProtectedRoute>
   },
   {
-    path: "/account",
+    path: "/account/:id",
     element: <ProtectedRoute><Account /></ProtectedRoute>
   },
   {
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute><Chat /></ProtectedRoute>
   },
   {
-    path: "/topic",
+    path: "/topic/:id",
     element: <Topic />
   },
   {
