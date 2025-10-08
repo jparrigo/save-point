@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Button } from "../ui/button";
 
 interface Props {
   open: boolean;
@@ -27,26 +28,16 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
   };
 
   useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (cameraActive) {
-      startCamera();
+    if (open) {
+      startCamera()
+      setCameraActive(true)
     } else {
-      stopCamera();
+      stopCamera()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cameraActive]);
+  }, [open])
 
   const startCamera = async () => {
     try {
-      // Para qualquer stream anterior imediatamente
-      stopCamera();
-
       const constraints: MediaStreamConstraints = {
         video: { facingMode: "environment" },
         audio: false,
@@ -148,46 +139,48 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex justify-center items-center z-50">
       <div
-        className={`relative flex flex-col items-center bg-gray-800 rounded-xl p-5 w-[600px] ${
+        className={`relative flex flex-col items-center bg-[#141414] border border-[#343434] rounded-xl p-5 w-[600px] ${
           step === 1 ? "h-[640px]" : "h-[500px]"
         }`}
       >
-        <h2 className="text-white text-2xl font-bold mb-5">Adicionar jogo por imagem</h2>
+        <div className="flex flex-row items-center justify-between w-full mb-8">
+          <h2 className="text-white text-xl font-bold">Add game with photo</h2>
 
-        <button
-          className="absolute top-3 right-3 text-white text-2xl cursor-pointer bg-transparent"
-          onClick={() => {
-            onClose();
-            stopCamera();
-          }}
-        >
-          ✕
-        </button>
+          <button
+            className="text-white text-2xl cursor-pointer bg-transparent"
+            onClick={() => {
+              onClose();
+              stopCamera();
+            }}
+          >
+            ✕
+          </button>
+        </div>
 
         {step === 1 && (
           <>
             <div className="flex gap-2 w-full mb-3">
               <button
-                className="flex-1 bg-blue-500 text-white py-2 rounded-lg cursor-pointer"
+                className="flex-1 bg-purple-600 text-white py-2 rounded-lg cursor-pointer"
                 onClick={handleCameraClick}
                 type="button"
               >
-                Câmera
+                Camera
               </button>
 
               <label
                 htmlFor="fileUpload"
-                className="flex-1 bg-gray-600 text-white py-2 rounded-lg text-center cursor-pointer"
+                className="flex-1 bg-white/10 text-white py-2 rounded-lg text-center cursor-pointer"
                 onClick={handleFileClick}
               >
-                Arquivo
+                File
               </label>
               <input id="fileUpload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
             </div>
 
-            <div className="relative flex-1 w-full bg-gray-900 rounded-lg mb-3 flex justify-center items-center overflow-hidden">
+            <div className="relative flex-1 w-full bg-black rounded-lg mb-3 flex justify-center items-center overflow-hidden">
               {cameraActive ? (
                 <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
               ) : previewUrl ? (
@@ -200,21 +193,9 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
               <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {cameraActive && (
-              <button className="bg-green-500 text-white py-2 px-4 rounded-lg cursor-pointer mb-2" onClick={takePhoto} type="button">
-                Tirar Foto
-              </button>
-            )}
-
-            <div className="flex justify-center w-full mt-2">
-              <button
-                className="bg-green-500 text-white py-2 px-4 rounded-lg cursor-pointer disabled:opacity-50"
-                onClick={() => setStep(2)}
-                disabled={!previewUrl}
-                type="button"
-              >
-                Continuar
-              </button>
+            <div className="flex flex-row items-center justify-center gap-4">
+              <Button variant="purple" className="w-full" disabled={!cameraActive} onClick={takePhoto}>Take photo</Button>
+              <Button className="w-full" disabled={!previewUrl} onClick={() => setStep(2)}>Search</Button>
             </div>
           </>
         )}
@@ -236,7 +217,11 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
             <div className="flex justify-between w-full mt-4">
               <button
                 className="bg-red-500 text-white py-2 px-4 rounded-lg cursor-pointer"
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setStep(1)
+                  startCamera()
+                  setCameraActive(true)
+                }}
                 type="button"
               >
                 Cancelar
