@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  Camera,
   SearchIcon,
 } from "lucide-react"
 
@@ -16,6 +17,7 @@ import {
 import { useNavigate } from "react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { UserList } from "../navbar/navbar"
+import DialogAddGameByImage from "../dialog/DialogAddGameByImage"
 
 interface SearchBarProps {
   setOpenSearch: (value: boolean) => void
@@ -30,6 +32,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps) {
   const [open, setOpen] = React.useState(false)
+  const [showAddModal, setShowAddModal] = React.useState(false);
   const navigate = useNavigate()
 
   React.useEffect(() => {
@@ -51,9 +54,9 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
   }, [open])
 
   return (
-    <>
+    <div className="flex flex-row items-center gap-4">
       <button
-        className="w-1/3 dark border-input text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+        className="dark border-input text-foreground placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 inline-flex h-9 rounded-md border px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
         onClick={() => setOpen(true)}
       >
         <span className="flex grow items-center">
@@ -67,6 +70,11 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
           ⌘K
         </kbd>
       </button>
+      <Camera onClick={() => setShowAddModal(true)} className="cursor-pointer" color="gray" />
+      <DialogAddGameByImage
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search for a game or user..." />
         <CommandList>
@@ -112,6 +120,6 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
           </CommandGroup>
         </CommandList>
       </CommandDialog>
-    </>
+    </div>
   )
 }
