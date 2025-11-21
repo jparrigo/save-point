@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
 import { instance } from "../../../lib/axios";
-import { useNavigate, useSearchParams } from "react-router-dom"; // Importe o useSearchParams
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../../components/ui/carousel";
 import Footer from "../../../components/footer/footer";
 import Autoplay from "embla-carousel-autoplay";
