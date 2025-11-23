@@ -11,13 +11,15 @@ import ModalCreateLibrary from "./modal/modal.create-library";
 import ModalMoveGame from "./modal/modal.move-game";
 import AlertComponent from "../../../components/alert/alert";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
+import Footer from "../../../components/footer/footer";
 
 export interface ListGamesType {
-  category: string,
-  list: {
+  id: string
+  name: string,
+  games: {
     id: string
-    title: string
-    img: string
+    name: string
+    cover: string
   }[]
 }
 
@@ -32,21 +34,10 @@ export default function Library() {
 
   async function getGamesWishList() {
     const user = getLocalUserData()
-    const ret = await instance.get(`/wishlist/${user?.id}`)
-    let newWishList = ret.data.map((item: any) => {
-      return {
-        id: item.game.id,
-        title: item.game.name,
-        img: item.game.cover.replace("{size}", "cover_big_2x") 
-      }
-    })
+    const customList = await instance.get(`/custom-list/user/${user?.id}`)
+    let customListWithItems: ListGamesType[] = customList.data
 
-    setList([
-      {
-        category: "📜 Wish List",
-        list: newWishList
-      }
-    ])
+    setList(customListWithItems)
   }
 
   async function deleteFromWishlist(gameId: string) {
@@ -76,9 +67,10 @@ export default function Library() {
   }
 
   return (
-    <main className="bg-[url(/default.png)] bg-cover min-h-screen">
+    <>
+      <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
-      <ModalCreateLibrary open={openModalCreateLibrary} onOpenChange={setOpenModalCreateLibrary} />
+        <ModalCreateLibrary callback={getGamesWishList} open={openModalCreateLibrary} onOpenChange={setOpenModalCreateLibrary} />
       <AlertComponent
         open={openAlertRemoveGame}
         onOpenChange={setOpenAlertRemoveGame}
@@ -88,23 +80,23 @@ export default function Library() {
         callback={() => deleteFromWishlist(removeGameId.current)}
       />
       <ModalMoveGame open={openModalMoveGame} onOpenChange={setOpenModalMoveGame} />
-      <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed bottom-10 right-10">
+        <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed z-50 bottom-10 right-10">
         <CirclePlus /> Create library
       </Button>
       <div className="pt-20">
         <section className="px-20 mt-20">
-          <Accordion type="multiple" defaultValue={[list[0].category]}>
+            <Accordion type="multiple">
           {
             list.map((item, i) => {
               return (
-                <AccordionItem key={i} value={item.category}>
+                <AccordionItem key={i} value={item.name}>
                   <AccordionTrigger>
-                      <h1 className="text-2xl">{item.category}</h1>
-                      <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.list.length}</div>
+                    <h1 className="text-2xl">{item.name}</h1>
+                    <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.games.length}</div>
                   </AccordionTrigger>
                   <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
                     {
-                      item.list.map((item, i) => {
+                      item.games.map((item, i) => {
                         return (
                           <div
                             className="relative flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border rounded-2xl group"
@@ -116,13 +108,13 @@ export default function Library() {
                             >
                               <img
                                 className="w-full h-full object-cover rounded-2xl"
-                                src={item.img}
-                                alt={item.title}
+                                src={item.cover.replace("{size}", "cover_big_2x")}
+                                alt={item.name}
                               />
 
                               {/* Nome do jogo que aparece no hover */}
                               <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl">
-                                <h1 className="text-white text-center text-lg font-semibold">{item.title}</h1>
+                                <h1 className="text-white text-center text-lg font-semibold">{item.name}</h1>
                               </div>
                             </div>
                               <DropdownMenu>
@@ -174,5 +166,7 @@ export default function Library() {
         </section>
       </div>
     </main>
+      <Footer />
+    </>
   );
 }

@@ -58,17 +58,17 @@ export default function NavBar() {
   },[search])
 
   return (
-    <nav className="fixed right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 bg-[#151515] border-[#252525] border rounded-xl text-[#D9D9D9] z-50">
+    <nav className="absolute right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 rounded-xl text-[#D9D9D9] z-50">
       <h1 onClick={() => navigate("/home")} className="font-bold text-xl cursor-pointer">{size.width <= 800 ? "SP" : "Save Point"}</h1>
       <SearchBar user={users} games={games} setOpenSearch={(value) => setSearch(value)} />
       {
         size.width >= 800
         ? (
           <div className="flex flex-row items-center gap-6">
-            <a className={location == "/home" ? "text-white" : "text-white/40"} href="/home">Home</a>
-            <a className={location == "/library" ? "text-white" : "text-white/40"} href="/library">Library</a>
-              <a className={location == "/chat" ? "text-white" : "text-white/40"} href="/chat">Chat</a>
-              <a className={location == "/forum" ? "text-white" : "text-white/40"} href="/forum">Forum</a>
+              <a className={location == "/home" ? "text-white" : "text-white/70"} href="/home">Home</a>
+              <a className={location == "/library" ? "text-white" : "text-white/70"} href="/library">Library</a>
+              <a className={location == "/chat" ? "text-white" : "text-white/70"} href="/chat">Chat</a>
+              <a className={location == "/forum" ? "text-white" : "text-white/70"} href="/forum">Forum</a>
             
             <DropdownMenu>
               <DropdownMenuTrigger>
