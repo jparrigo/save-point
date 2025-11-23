@@ -20,6 +20,7 @@ import Forum from './app/private/forum/Forum'
 import Camtest from './app/private/camtest/camtest'
 import ProtectedRoute from './components/protectedroute/ProtectedRoute'
 import { Toaster } from './components/ui/sonner'
+import TopicMessage from './app/private/forum/TopicMessages'
 
 
 const router = createBrowserRouter([
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
   {
     path: "/topic/:id",
     element: <Topic />
+  },
+  {
+    path: "/topic/:id/messages",
+    element: <TopicMessage />
   },
   {
     path: "/forum",

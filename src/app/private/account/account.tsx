@@ -7,6 +7,7 @@ import { Button } from "../../../components/ui/button";
 import { useParams } from "react-router";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
 import ModalListOfFriends from "./modal/modal-list-of-friends";
+import Footer from "../../../components/footer/footer";
 
 export default function Account() {
   const { id } = useParams<{ id: string }>()
@@ -26,6 +27,9 @@ export default function Account() {
     updatedAt: string
     user: {
       username: string
+    },
+    game: {
+      name: string
     }
   }[]>([])
   const [gameList, setGameList] = useState<{
@@ -178,7 +182,7 @@ export default function Account() {
               {reviews.map((item, i) => (
                 <div key={i} className="flex-shrink-0 w-[200px]">
                   <div className="bg-black/50 p-4 rounded-md">
-                    <h2 className="text-white text-lg font-semibold">{item.user.username}</h2>
+                    <h2 className="text-white text-lg font-semibold">{item.game.name}</h2>
                     <p className="text-white text-sm mt-2">{item.reviewText}</p>
                   </div>
                 </div>
@@ -188,6 +192,7 @@ export default function Account() {
         </div>
 
       </div>
+      <Footer />
     </main>
   );
 }
