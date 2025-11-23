@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
 import { instance } from "../../../lib/axios";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../../../components/ui/carousel";
 import Footer from "../../../components/footer/footer";
 import Autoplay from "embla-carousel-autoplay";
@@ -14,13 +14,28 @@ interface GameType {
 
 export default function Home() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [gamesList, setGamesList] = useState<GameType[]>([]);
 
-  // Nova função: busca todos os jogos do banco de dados
+  useEffect(() => {
+    const userId = searchParams.get("userId");
+    const email = searchParams.get("email");
+    const username = searchParams.get("username");
+
+    if (userId && email) {
+      const userData = {
+        id: userId,
+        username: username || email.split('@')[0],
+        email: email
+      };
+      localStorage.setItem("@savepoint/login", JSON.stringify(userData));
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams]);
+
   async function getAllGames() {
     try {
       const response = await instance.get("/games");
-      console.log(response.data)
       const allGames = response.data.map((game: any) => ({
         id: game.id,
         title: game.name,
@@ -53,9 +68,9 @@ export default function Home() {
           className="w-full dark mb-12"
           plugins={[
             Autoplay({
-              delay: 2000, // Adjust the delay in milliseconds
-              stopOnInteraction: true, // Stop autoplay on user interaction
-              stopOnLastSnap: false, // Continue looping after reaching the last slide
+              delay: 2000,
+              stopOnInteraction: true,
+              stopOnLastSnap: false,
             }),
           ]}
         >
@@ -73,9 +88,9 @@ export default function Home() {
           <div className="flex flex-col gap-4">
             <h1>Coming soon</h1>
             {
-              gamesList.map((item) => {
+              gamesList.map((item, index) => {
                 return (
-                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                  <div key={index} className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                     <img className="w-16 h-20" src={item.img} alt="" />
                     <div className="flex flex-col">
                       <h1>{item.title}</h1>
@@ -89,9 +104,9 @@ export default function Home() {
           <div className="flex flex-col gap-4">
             <h1>Recently anticipated</h1>
             {
-              gamesList.map((item) => {
+              gamesList.map((item, index) => {
                 return (
-                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                  <div key={index} className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                     <img className="w-16 h-20" src={item.img} alt="" />
                     <div className="flex flex-col">
                       <h1>{item.title}</h1>
@@ -105,9 +120,9 @@ export default function Home() {
           <div className="flex flex-col gap-4">
             <h1>Sleeper hits</h1>
             {
-              gamesList.map((item) => {
+              gamesList.map((item, index) => {
                 return (
-                  <div className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
+                  <div key={index} className="flex flex-row items-start gap-4 cursor-pointer" onClick={() => navigate(`/game/${item.id}`)}>
                     <img className="w-16 h-20" src={item.img} alt="" />
                     <div className="flex flex-col">
                       <h1>{item.title}</h1>

@@ -39,6 +39,7 @@ export default function Register() {
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    console.log(data);
 
     instance.post("/user/register", {
       username: data.username,
@@ -48,6 +49,10 @@ export default function Register() {
       navigate("/login")
     })
   } 
+
+  function handleGoogleLogin() {
+    window.location.href = "http://localhost:3000/user/google";
+  }
 
     return (
       <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
@@ -112,7 +117,7 @@ export default function Register() {
                 )} 
               />
               <Button size="lg" variant="purple" type="submit">Get Started</Button>
-              <Button size="lg" variant='default'>
+              <Button size="lg" variant='default' onClick={handleGoogleLogin}>
                 <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
                 Sign in with Google
               </Button>
