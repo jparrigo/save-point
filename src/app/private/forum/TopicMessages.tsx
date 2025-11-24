@@ -39,7 +39,9 @@ export default function TopicMessage() {
       return toast.info("Empty message.")
     }
 
-    await instance.post(`/forums/topics/${id}/user/${user?.id}/messages`, {
+    await instance.post(`/forums/topics/messages`, {
+      topicId: id,
+      userId: user?.id,
       message: newMessage
     }).then(() => {
       setNewMessage("")
@@ -58,7 +60,7 @@ export default function TopicMessage() {
         setTopic(res.data)
       })
 
-    await instance.get(`/forums/topics/${id}/messages`)
+    await instance.get(`/forums/topics/messages/${id}`)
       .then((res) => {
         console.log(res.data);
         setMessages(res.data)
