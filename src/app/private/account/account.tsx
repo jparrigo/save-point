@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
-import DialogEditUser from "../../../components/dialog/dialog.edituser";
 import { instance } from "../../../lib/axios";
 import { Button } from "../../../components/ui/button";
 import { useParams } from "react-router";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
 import ModalListOfFriends from "./modal/modal-list-of-friends";
 import Footer from "../../../components/footer/footer";
+import ModalEditUser from "./modal/modal-edit-user";
 
 export default function Account() {
   const { id } = useParams<{ id: string }>()
@@ -40,6 +40,7 @@ export default function Account() {
 
   const [isFollow, setIsFollow] = useState(false)
   const [openModalListOfFriends, setOpenModalListOfFriends] = useState(false)
+  const [openModalEditUser, setOpenModalEditUser] = useState(false)
 
   async function getUserData() {
     const res = await instance.get(`/user/${id}`)
@@ -112,13 +113,19 @@ export default function Account() {
   }, [id]);
 
   return (
-    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
+    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100 pt-30">
       <NavBar />
       <ModalListOfFriends
         open={openModalListOfFriends}
         onOpenChange={setOpenModalListOfFriends}
       />
-      <div className="flex flex-col items-center mx-50 mt-40 bg-[#151515] border-[#252525] border rounded-2xl">
+      <ModalEditUser
+        open={openModalEditUser}
+        onOpenChange={setOpenModalEditUser}
+        callback={getUserData}
+        user={user}
+      />
+      <div className="flex flex-col items-center mx-50 bg-[#151515] border-[#252525] border rounded-2xl">
 
         {/* Profile Header */}
         <div className="bg-black/10 rounded-xl p-6 mb-10 w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -141,7 +148,7 @@ export default function Account() {
           </Button>
           {
             id === userLocalData?.id
-              ? <DialogEditUser userData={user} onSubmitPass={() => getUserData()} />
+              ? <Button onClick={() => setOpenModalEditUser(true)} variant="purple">Edit user</Button>
               : (
                 <Button onClick={followUser} variant={isFollow ? "default" : "purple"}>
                   {isFollow ? "Un Follow" : "Follow"}
