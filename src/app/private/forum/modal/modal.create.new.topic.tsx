@@ -5,7 +5,6 @@ import { Input } from "../../../../components/ui/input";
 import { toast } from "sonner";
 import { instance } from "../../../../lib/axios";
 import { getLocalUserData } from "../../../../lib/getLocalUserData";
-import { AxiosError } from "axios";
 
 interface ModalCreateNewTopicProps extends ModalWrapperProps {
   callback: () => void
@@ -18,7 +17,9 @@ export default function ModalCreateNewTopic({ open, onOpenChange, callback, game
 
   async function onSubmit() {
     const user = getLocalUserData()
-    await instance.post(`/forums/game/${gameId}/user/${user?.id}/topics`, {
+    await instance.post(`/forums/topics/create`, {
+      gameId: gameId,
+      userId: user?.id,
       title: title,
       message: message
     }).then(() => {
