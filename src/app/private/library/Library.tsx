@@ -11,20 +11,23 @@ import ModalCreateLibrary from "./modal/modal.create-library";
 import ModalMoveGame from "./modal/modal.move-game";
 import AlertComponent from "../../../components/alert/alert";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
+import Footer from "../../../components/footer/footer";
+import { Skeleton } from "../../../components/ui/skeleton";
 
 export interface ListGamesType {
-  category: string,
-  list: {
+  id: string
+  name: string,
+  games: {
     id: string
-    title: string
-    img: string
+    name: string
+    cover: string
   }[]
 }
 
 
 export default function Library() {
   const navigate = useNavigate()
-  const [list, setList] = useState<ListGamesType[]>()
+  const [list, setList] = useState<ListGamesType[] | null>(null)
   const [openModalCreateLibrary, setOpenModalCreateLibrary] = useState(false)
   const [openModalMoveGame, setOpenModalMoveGame] = useState(false)
   const [openAlertRemoveGame, setOpenAlertRemoveGame] = useState(false)
@@ -32,21 +35,10 @@ export default function Library() {
 
   async function getGamesWishList() {
     const user = getLocalUserData()
-    const ret = await instance.get(`/wishlist/${user?.id}`)
-    let newWishList = ret.data.map((item: any) => {
-      return {
-        id: item.game.id,
-        title: item.game.name,
-        img: item.game.cover.replace("{size}", "cover_big_2x") 
-      }
-    })
+    const customList = await instance.get(`/custom-list/user/${user?.id}`)
+    let customListWithItems: ListGamesType[] = customList.data
 
-    setList([
-      {
-        category: "📜 Wish List",
-        list: newWishList
-      }
-    ])
+    setList(customListWithItems)
   }
 
   async function deleteFromWishlist(gameId: string) {
@@ -67,18 +59,11 @@ export default function Library() {
     getGamesWishList()
   },[])
 
-  if (!list) {
-    return (
-      <main className="min-h-screen text-white bg-black flex justify-center items-center">
-        <p>Loading your game list...</p>
-      </main>
-    );
-  }
-
   return (
-    <main className="bg-[url(/default.png)] bg-cover min-h-screen">
+    <>
+      <main className="bg-[url(/default.png)] bg-cover min-h-screen">
       <NavBar />
-      <ModalCreateLibrary open={openModalCreateLibrary} onOpenChange={setOpenModalCreateLibrary} />
+        <ModalCreateLibrary callback={getGamesWishList} open={openModalCreateLibrary} onOpenChange={setOpenModalCreateLibrary} />
       <AlertComponent
         open={openAlertRemoveGame}
         onOpenChange={setOpenAlertRemoveGame}
@@ -88,91 +73,114 @@ export default function Library() {
         callback={() => deleteFromWishlist(removeGameId.current)}
       />
       <ModalMoveGame open={openModalMoveGame} onOpenChange={setOpenModalMoveGame} />
-      <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed bottom-10 right-10">
+        <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed z-50 bottom-10 right-10">
         <CirclePlus /> Create library
       </Button>
       <div className="pt-20">
         <section className="px-20 mt-20">
-          <Accordion type="multiple" defaultValue={[list[0].category]}>
-          {
-            list.map((item, i) => {
-              return (
-                <AccordionItem key={i} value={item.category}>
-                  <AccordionTrigger>
-                      <h1 className="text-2xl">{item.category}</h1>
-                      <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.list.length}</div>
-                  </AccordionTrigger>
-                  <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
-                    {
-                      item.list.map((item, i) => {
-                        return (
+            <Accordion type="multiple">
+              {
+                !list
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                    <AccordionItem key={i} value={`skeleton-${i}`}>
+                      <AccordionTrigger>
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="h-6 w-40" />
+                          <Skeleton className="h-6 w-10" />
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
+                        {Array.from({ length: 4 }).map((_, j) => (
                           <div
                             className="relative flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border rounded-2xl group"
-                            key={i}
+                            key={j}
                           >
-                            <div
-                              className="w-40 h-50 max-md:w-fit cursor-pointer relative overflow-hidden"
-                              onClick={() => navigate(`/game/${item.id}`)}
-                            >
-                              <img
-                                className="w-full h-full object-cover rounded-2xl"
-                                src={item.img}
-                                alt={item.title}
-                              />
-
-                              {/* Nome do jogo que aparece no hover */}
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl">
-                                <h1 className="text-white text-center text-lg font-semibold">{item.title}</h1>
-                              </div>
-                            </div>
-                              <DropdownMenu>
-                              <DropdownMenuTrigger className="absolute right-4 top-4 bg-black/80 rounded-md p-1">
-                                <Ellipsis className="cursor-pointer" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="dark">
-                                  <DropdownMenuGroup onClick={() => setOpenModalMoveGame(true)}>
-                                    <DropdownMenuItem>
-                                      <Move />
-                                      Move Game
-                                  </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuGroup>
-                                    <DropdownMenuItem disabled>
-                                      <Link />
-                                      Copy Link
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem disabled>
-                                      <ChartColumn />
-                                      Stats
-                                    </DropdownMenuItem>
-                                  </DropdownMenuGroup>
-                                  <DropdownMenuSeparator />
-                                <DropdownMenuGroup
-                                  onClick={() => {
-                                    removeGameId.current = item.id;
-                                    setOpenAlertRemoveGame(true);
-                                  }}
-                                >
-                                    <DropdownMenuItem className="bg-red-500/50 cursor-pointer">
-                                    <Trash2 color="white" />
-                                      Remove
-                                    </DropdownMenuItem>
-                                  </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Skeleton className="w-40 h-50 max-md:w-fit rounded-2xl" />
                           </div>
-                        )
-                      })
-                    }
-                  </AccordionContent>
-                </AccordionItem>
-              )
-            })
-          } 
+                        ))}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))
+                  : list.map((item, i) => {
+                    return (
+                      <AccordionItem key={i} value={item.name}>
+                        <AccordionTrigger>
+                          <h1 className="text-2xl">{item.name}</h1>
+                          <div className="border border-white/10 px-1 rounded-sm text-lg font-light">{item.games.length}</div>
+                        </AccordionTrigger>
+                        <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
+                          {
+                            item.games.map((item, i) => {
+                              return (
+                                <div
+                                  className="relative flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border rounded-2xl group"
+                                  key={i}
+                                >
+                                  <div
+                                    className="w-40 h-50 max-md:w-fit cursor-pointer relative overflow-hidden"
+                                    onClick={() => navigate(`/game/${item.id}`)}
+                                  >
+                                    <img
+                                      className="w-full h-full object-cover rounded-2xl"
+                                      src={item.cover.replace("{size}", "cover_big_2x")}
+                                      alt={item.name}
+                                    />
+
+                                    {/* Nome do jogo que aparece no hover */}
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl">
+                                      <h1 className="text-white text-center text-lg font-semibold">{item.name}</h1>
+                                    </div>
+                                  </div>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger className="absolute right-4 top-4 bg-black/80 rounded-md p-1">
+                                      <Ellipsis className="cursor-pointer" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="dark">
+                                      <DropdownMenuGroup onClick={() => setOpenModalMoveGame(true)}>
+                                        <DropdownMenuItem>
+                                          <Move />
+                                          Move Game
+                                        </DropdownMenuItem>
+                                      </DropdownMenuGroup>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuGroup>
+                                        <DropdownMenuItem disabled>
+                                          <Link />
+                                          Copy Link
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem disabled>
+                                          <ChartColumn />
+                                          Stats
+                                        </DropdownMenuItem>
+                                      </DropdownMenuGroup>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuGroup
+                                        onClick={() => {
+                                          removeGameId.current = item.id;
+                                          setOpenAlertRemoveGame(true);
+                                        }}
+                                      >
+                                        <DropdownMenuItem className="bg-red-500/50 cursor-pointer">
+                                          <Trash2 color="white" />
+                                          Remove
+                                        </DropdownMenuItem>
+                                      </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+                              )
+                            })
+                          }
+                        </AccordionContent>
+                      </AccordionItem>
+                    )
+                  })
+              }
           </Accordion>
         </section>
       </div>
     </main>
+      <Footer />
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DialogAddGame from "../../../components/dialog/dialog.addgame";
+import DialogAddGame from "./dialog.addgame";
 import GameCard from "../../../components/gamecard/gamecard";
 import NavBar from "../../../components/navbar/navbar";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
@@ -8,9 +8,9 @@ import { Button } from "../../../components/ui/button";
 import { useParams } from "react-router";
 import { instance } from "../../../lib/axios";
 import { toast } from "sonner";
+import Footer from "../../../components/footer/footer";
 
 export interface GameData {
-  //score: 0;
   id: string;
   igdbId: number;
   name: string;
@@ -80,6 +80,7 @@ export default function Game() {
     try {
       const resp = await instance.get(`/games/game/${id}`)
       setGame(resp.data);
+      console.log(resp.data);
     } catch (error) {
       console.error("Erro ao buscar jogo:", error);
     }
@@ -108,10 +109,28 @@ export default function Game() {
     );
   }
 
+  const backgroundUrl =
+    game.artworks && game.artworks.length > 0
+      ? game.artworks[0].replace("{size}", "cover_big_2x")
+      : "/default.png";
+
   return (
-    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100">
-      <NavBar />
-      <section className="pt-50 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-30">
+    <main className="min-h-screen bg-[#050712] text-slate-100">
+      {/* Top hero area with artwork background */}
+      <div className="relative">
+        <NavBar />
+        <div className="relative w-full h-[320px] max-md:h-[220px]">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundUrl})` }}
+          />
+          {/* Gradient to fade into solid background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-[#050712]" />
+        </div>
+      </div>
+
+      {/* Content area over solid background */}
+      <section className="relative -mt-24 grid grid-cols-4 auto-cols-auto w-full px-10 gap-40 pb-20 max-md:flex max-md:flex-col max-md:gap-10 max-md:pt-10">
         {/* GameCard */}
         <GameCard image={game.cover.replace("{size}", "cover_big_2x")} />
         <div className="w-full col-start-2 col-end-5">
@@ -213,6 +232,7 @@ export default function Game() {
           </div>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
