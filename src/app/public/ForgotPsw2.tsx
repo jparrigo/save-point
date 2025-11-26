@@ -16,23 +16,42 @@ export default function ForgotPsw2() {
     if (!token) return alert("Token inválido.");
     if (password !== repeat) return alert("As senhas não coincidem.");
 
-    try {
-      const resp = await instance.post(`/user/recoverpass/${token}`,{
-        newPassword: password
-      })
+    const encodedToken = encodeURIComponent(token);
+    const url = `/user/recoverpass/${encodedToken}`;
 
-      if(resp.data) {
+    try {
+      console.log("[ForgotPsw2] token (raw):", token);
+      console.log("[ForgotPsw2] encoded token:", encodedToken);
+      console.log("[ForgotPsw2] POST url:", url);
+
+      const resp = await instance.post(
+        url,
+        { newPassword: password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("[ForgotPsw2] resp:", resp);
+
+      if (resp && resp.status >= 200 && resp.status < 300) {
         alert("Senha alterada com sucesso!");
         navigate("/login");
+        return;
       }
 
+      alert("Resposta inesperada do servidor.");
     } catch (error: any) {
-      alert("Erro ao redefinir senha: " + error.message);
+      console.error("[ForgotPsw2] error:", error);
+      const backendMessage =
+        error?.response?.data?.message ??
+        (typeof error?.response?.data === "string" ? error.response.data : null) ??
+        error?.message ??
+        "Erro desconhecido.";
+      alert("Erro ao redefinir senha: " + backendMessage);
     }
   };
 
   return (
-    <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
+    <div className="h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]">
       <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
         <h1 className="text-5xl">Reset your password</h1>
       </div>
@@ -54,7 +73,7 @@ export default function ForgotPsw2() {
           onChange={(e) => setRepeat(e.target.value)}
         />
         <div className="flex flex-col gap-3 mt-4">
-          <Button variant='purple' size="lg" onClick={handleResetPassword}>
+          <Button variant="purple" size="lg" onClick={handleResetPassword}>
             Save Changes
           </Button>
         </div>
