@@ -34,7 +34,8 @@ export default function Login() {
       localStorage.setItem("@savepoint/login", JSON.stringify({
         id: res.data.user.id,
         username: res.data.user.username,
-        email: res.data.user.email
+        email: res.data.user.email,
+        profilePictureUrl: res.data.user.profilePictureUrl
       }))
       navigate("/home")
     }).catch((e) => {
@@ -47,7 +48,8 @@ export default function Login() {
     const userData = {
         id: "google",
         username: "google",
-        email: "google"
+      email: "google",
+      profilePictureUrl: ""
       };
     localStorage.setItem("@savepoint/login", JSON.stringify(userData));
     window.location.href = "http://localhost:3000/user/google";

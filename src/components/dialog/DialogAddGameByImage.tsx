@@ -259,7 +259,7 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
           <div className="flex flex-col w-full">
             <div onClick={() => navigate(`/game/${foundGame?.id}`)} className="flex-1 flex flex-row items-center cursor-pointer hover:bg-[#202020] hover:border-[#444444] bg-[#191919] border border-[#343434] p-2 gap-4 rounded-xl">
               <img src={foundGame?.cover_url} alt="Imagem do usuário" className="w-30 h-40 rounded-lg" />
-              <span className="font-bold text-lg">{foundGame?.name} <span className="font-normal text-white/60">({foundGame?.id})</span></span>
+              <span className="font-bold text-lg">{foundGame?.name}</span>
             </div>
 
             <div className="mt-6">
@@ -269,7 +269,7 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
                   foundGame?.alternatives.map((item) => {
                     return (
                       <div onClick={() => navigate(`/game/${item.id}`)} key={item.id} className="flex-1 flex flex-row items-center cursor-pointer hover:bg-[#202020] hover:border-[#444444] bg-[#191919] border border-[#343434] p-2 gap-4 rounded-xl">
-                        <span className="font-bold text-md">{item.name} <span className="font-normal text-white/60">({item.id})</span></span>
+                        <span className="font-bold text-md">{item.name}</span>
                       </div>
                     )
                   })

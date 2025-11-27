@@ -18,6 +18,9 @@ const FormSchema = z.object({
     message: "Must be 3 or more characters long"
   }),
   email: z.string().email({ message: "Invalid email address" }),
+  profilePictureUrl: z.string().url({
+    message: "Invalid url"
+  })
 })
 
 interface ModalEditUserProps extends ModalWrapperProps {
@@ -25,6 +28,7 @@ interface ModalEditUserProps extends ModalWrapperProps {
     id: string
     username: string
     email: string
+    profilePictureUrl: string
   }
 }
 
@@ -39,31 +43,35 @@ export default function ModalEditUser({ onOpenChange, open, callback, user }: Mo
     defaultValues: {
       username: "",
       email: "",
+      profilePictureUrl: ""
     }
   })
 
   useEffect(() => {
     form.setValue("email", user.email)
     form.setValue("username", user.username)
+    form.setValue("profilePictureUrl", user.profilePictureUrl)
   }, [user])
 
   useEffect(() => {
-    if (form.getValues("email") != user.email || form.getValues("username") != user.username) {
+    if (form.getValues("email") != user.email || form.getValues("username") != user.username || form.getValues("profilePictureUrl") != user.profilePictureUrl) {
       setDisabledSaveButton(false)
     } else {
       setDisabledSaveButton(true)
     }
-  }, [form.watch("username")])
+  }, [form.watch("username"), form.watch("email"), form.watch("profilePictureUrl")])
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     await instance.put(`/user/${user.id}`, {
       username: data.username,
-      email: data.email
+      email: data.email,
+      profilePictureUrl: data.profilePictureUrl
     }).then(() => {
       localStorage.setItem("@savepoint/login", JSON.stringify({
         id: user.id,
         username: data.username,
-        email: data.email
+        email: data.email,
+        profilePictureUrl: data.profilePictureUrl
       }))
       setDisabledSaveButton(true)
       onOpenChange(false)
@@ -134,6 +142,19 @@ export default function ModalEditUser({ onOpenChange, open, callback, user }: Mo
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="savepoint@gmail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="profilePictureUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profile Url</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://www.image.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

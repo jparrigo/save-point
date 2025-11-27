@@ -37,8 +37,11 @@ export default function DialogAddGame({ data }: { data: GameData }) {
   }
 
   async function getLists() {
+    console.log("Pegando Biblioteca")
     await instance.get(`/custom-list/user/${user?.id}`).then((res) => {
       setCustomList(res.data)
+      console.log(res.data);
+
     })
   }
 

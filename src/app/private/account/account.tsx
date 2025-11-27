@@ -33,6 +33,7 @@ export default function Account() {
     id: "",
     username: "",
     email: "",
+    profilePictureUrl: "",
     gamesCount: 0,
     friends: 100,
   });
@@ -50,6 +51,7 @@ export default function Account() {
       id: res.data.id,
       username: res.data.username,
       email: res.data.email,
+      profilePictureUrl: res.data.profilePictureUrl,
       friends: 0,
       gamesCount: 0
     });
@@ -130,9 +132,9 @@ export default function Account() {
         {/* Profile Header */}
         <div className="bg-black/10 rounded-xl p-6 mb-10 w-full flex flex-col md:flex-row items-center md:items-start gap-6">
           <img
-            src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg"
+            src={user.profilePictureUrl ? user.profilePictureUrl : "https://images-ext-1.discordapp.net/external/lhxKviHu_H5r21_yhxDSGa-kJLRXaS_feKoVwsldMwg/%3Fq%3Dtbn%3AANd9GcTVeEXL9jaUwcT_4xdunUiHz3_xA-80z8eYgw%26s/https/encrypted-tbn0.gstatic.com/images?format=webp"}
             alt="Profile"
-            className="w-28 h-28 rounded-md"
+            className="w-28 h-28 rounded-md object-cover object-center"
           />
           <div className="flex-1">
             <span className="text-white/60 text-sm">{user.id}</span>
@@ -181,7 +183,7 @@ export default function Account() {
             <div className="flex justify-center py-10 flex-col gap-4 px-4 w-full">
               {
                   gameList.length === 0
-                    ? <p className="text-center text-white/60 mt-2">No libraries yet...</p>
+                    ? <p className="text-start text-white/60 mt-2">No libraries yet...</p>
                     : gameList.map((item, i) => {
                       return (
                         <div className="pl-8" key={i}>
@@ -209,7 +211,7 @@ export default function Account() {
         <div className="flex justify-center py-10 flex-col items-center px-4 gap-8 w-full">
           <h1 className="bg-purple-800 px-4 py-2 rounded-md">My Reviews</h1>
           <div className="w-full overflow-x-auto scrollbar-transparent">
-            <div className="flex gap-5 px-2 ">
+            <div className="flex gap-5">
               {
                 !reviews
                   ? Array.from({ length: 4 }).map((_, i) => (
@@ -225,7 +227,7 @@ export default function Account() {
                     <>
                       {
                         reviews.length == 0
-                          ? "No reviews yet..."
+                          ? <p className="text-center text-white/60 mt-2">No reviews yet...</p>
                           : null
                       }
                       {reviews.map((item, i) => (

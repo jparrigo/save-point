@@ -54,7 +54,8 @@ export default function Register() {
     const userData = {
         id: "google",
         username: "google",
-        email: "google"
+      email: "google",
+      profilePictureUrl: ""
       };
     localStorage.setItem("@savepoint/login", JSON.stringify(userData));
     window.location.href = "http://localhost:3000/user/google";
