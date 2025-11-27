@@ -92,7 +92,7 @@ export default function Login() {
             )} 
           />
           <Button size="lg" variant="purple" type="submit">Sign In</Button>
-          <Button size="lg" variant='default' onClick={handleGoogleLogin}>
+          <Button type="button" size="lg" variant='default' onClick={handleGoogleLogin}>
             <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
             Sign in with Google
           </Button>

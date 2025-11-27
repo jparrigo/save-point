@@ -28,6 +28,9 @@ interface ReviewsType {
   id: string
   rating: boolean
   reviewText: string
+  user: {
+    username: string
+  }
   createdAt: string
 }
 
@@ -115,7 +118,7 @@ export default function Game() {
       : "/default.png";
 
   return (
-    <main className="min-h-screen bg-[#050712] text-slate-100">
+    <main className="min-h-screen bg-[#080808] text-slate-100">
       {/* Top hero area with artwork background */}
       <div className="relative">
         <NavBar />
@@ -125,7 +128,7 @@ export default function Game() {
             style={{ backgroundImage: `url(${backgroundUrl})` }}
           />
           {/* Gradient to fade into solid background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-[#050712]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-[#080808]" />
         </div>
       </div>
 
@@ -140,9 +143,6 @@ export default function Game() {
               <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
               <DialogAddGame data={game} />
             </div>
-            <p className="text-lg font-medium mb-2">
-              <span className="opacity-70">Score:</span> 0
-            </p>
 
             <p className="opacity-70 mb-1">About:</p>
             <p className="leading-relaxed text-sm sm:text-base">{game.summary}</p>
@@ -163,7 +163,7 @@ export default function Game() {
             </div>
 
             {/* Reviews Section */}
-            <div className="mt-20">
+            <div className="mt-20 w-2/3">
               {/* Write a Review */}
               <div className="bg-black/30 p-6 rounded-lg">
                 <h2 className="text-2xl mb-4 font-bold max-md:text-sm">Write your analysis of: <span className="font-light">{game.name}</span></h2>
@@ -207,7 +207,7 @@ export default function Game() {
                     return (
                       <div key={i} className="flex flex-col gap-4 bg-black/30 p-6 rounded-xl mt-8">
                         <div className="flex flex-row justify-between items-center gap-8">
-                          <span className="text-sm text-white/40">{item.id}</span>
+                          <span className="text-sm text-white/40">{item.user.username}</span>
                           <span className="text-sm text-white/30">{item.createdAt}</span>
                         </div>
 

@@ -13,6 +13,7 @@ import AlertComponent from "../../../components/alert/alert";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
 import Footer from "../../../components/footer/footer";
 import { Skeleton } from "../../../components/ui/skeleton";
+import { toast } from "sonner";
 
 export interface ListGamesType {
   id: string
@@ -31,26 +32,56 @@ export default function Library() {
   const [openModalCreateLibrary, setOpenModalCreateLibrary] = useState(false)
   const [openModalMoveGame, setOpenModalMoveGame] = useState(false)
   const [openAlertRemoveGame, setOpenAlertRemoveGame] = useState(false)
-  const removeGameId = useRef("")
+  const removeGameData = useRef({
+    listId: "",
+    gameId: ""
+  })
+  const listDataGame = useRef({
+    listId: "",
+    listName: "",
+    gameId: ""
+  })
 
-  async function getGamesWishList() {
-    const user = getLocalUserData()
-    const customList = await instance.get(`/custom-list/user/${user?.id}`)
-    let customListWithItems: ListGamesType[] = customList.data
+  function handleCopyLink(gameId: string) {
+    const url = `${window.location.origin}/game/${gameId}`
 
-    setList(customListWithItems)
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        toast.success("Game link copied to clipboard!")
+      })
+      .catch(() => {
+        toast.error("Failed to copy link to clipboard.")
+      })
   }
 
-  async function deleteFromWishlist(gameId: string) {
+  async function getGamesWishList() {
+    setList(null)
+
+    try {
+      const user = getLocalUserData()
+      const customList = await instance.get(`/custom-list/user/${user?.id}`)
+      const customListWithItems: ListGamesType[] = customList.data
+
+      setList(customListWithItems)
+    } catch (error) {
+      console.error("Error to load custom lists:", error)
+      setList([])
+      toast.error("Error to load your libraries.")
+    }
+  }
+
+  async function deleteFromWishlist(gameId: string, listId: string) {
     const userLocalData = localStorage.getItem("@savepoint/login")
     const user = JSON.parse(userLocalData ? userLocalData : "")
 
-    await instance.delete("/wishlist", {
+    await instance.delete("/custom-list/items", {
       data: {
         gameId: gameId,
-        userId: user.id
+        userId: user.id,
+        listId: listId
       }
     }).then(() => {
+      toast.success("Game removed!")
       getGamesWishList()
     }).catch((err) => console.log(err))
   }
@@ -70,9 +101,14 @@ export default function Library() {
         title="Are you sure you want do remove this game?"
         description="This action will remove this game to your library."
         actionLabel="Remove"
-        callback={() => deleteFromWishlist(removeGameId.current)}
+          callback={() => deleteFromWishlist(removeGameData.current.gameId, removeGameData.current.listId)}
       />
-      <ModalMoveGame open={openModalMoveGame} onOpenChange={setOpenModalMoveGame} />
+        <ModalMoveGame
+          open={openModalMoveGame}
+          onOpenChange={setOpenModalMoveGame}
+          data={listDataGame.current}
+          callback={getGamesWishList}
+        />
         <Button onClick={() => setOpenModalCreateLibrary(true)} variant="purple" className="fixed z-50 bottom-10 right-10">
         <CirclePlus /> Create library
       </Button>
@@ -110,7 +146,7 @@ export default function Library() {
                         </AccordionTrigger>
                         <AccordionContent className="flex flex-wrap max-md:flex max-md:flex-col gap-4">
                           {
-                            item.games.map((item, i) => {
+                            item.games.map((gameItem, i) => {
                               return (
                                 <div
                                   className="relative flex flex-col w-fit gap-4 bg-[#151515] border-[#252525] border rounded-2xl group"
@@ -118,17 +154,17 @@ export default function Library() {
                                 >
                                   <div
                                     className="w-40 h-50 max-md:w-fit cursor-pointer relative overflow-hidden"
-                                    onClick={() => navigate(`/game/${item.id}`)}
+                                    onClick={() => navigate(`/game/${gameItem.id}`)}
                                   >
                                     <img
                                       className="w-full h-full object-cover rounded-2xl"
-                                      src={item.cover.replace("{size}", "cover_big_2x")}
-                                      alt={item.name}
+                                      src={gameItem.cover.replace("{size}", "cover_big_2x")}
+                                      alt={gameItem.name}
                                     />
 
                                     {/* Nome do jogo que aparece no hover */}
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl">
-                                      <h1 className="text-white text-center text-lg font-semibold">{item.name}</h1>
+                                      <h1 className="text-white text-center text-lg font-semibold">{gameItem.name}</h1>
                                     </div>
                                   </div>
                                   <DropdownMenu>
@@ -136,7 +172,14 @@ export default function Library() {
                                       <Ellipsis className="cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="dark">
-                                      <DropdownMenuGroup onClick={() => setOpenModalMoveGame(true)}>
+                                      <DropdownMenuGroup onClick={() => {
+                                        listDataGame.current = {
+                                          listId: item.id,
+                                          listName: item.name,
+                                          gameId: gameItem.id
+                                        }
+                                        setOpenModalMoveGame(true)
+                                      }}>
                                         <DropdownMenuItem>
                                           <Move />
                                           Move Game
@@ -144,7 +187,10 @@ export default function Library() {
                                       </DropdownMenuGroup>
                                       <DropdownMenuSeparator />
                                       <DropdownMenuGroup>
-                                        <DropdownMenuItem disabled>
+                                        <DropdownMenuItem
+                                          className="cursor-pointer"
+                                          onClick={() => handleCopyLink(gameItem.id)}
+                                        >
                                           <Link />
                                           Copy Link
                                         </DropdownMenuItem>
@@ -156,7 +202,10 @@ export default function Library() {
                                       <DropdownMenuSeparator />
                                       <DropdownMenuGroup
                                         onClick={() => {
-                                          removeGameId.current = item.id;
+                                          removeGameData.current = {
+                                            listId: item.id,
+                                            gameId: gameItem.id
+                                          }
                                           setOpenAlertRemoveGame(true);
                                         }}
                                       >

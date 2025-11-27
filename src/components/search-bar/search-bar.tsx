@@ -4,6 +4,7 @@ import * as React from "react"
 import {
   Camera,
   SearchIcon,
+  X,
 } from "lucide-react"
 
 import {
@@ -18,21 +19,20 @@ import { useNavigate } from "react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { UserList } from "../navbar/navbar"
 import DialogAddGameByImage from "../dialog/DialogAddGameByImage"
+import { instance } from "../../lib/axios"
+import { GameData } from "../../app/private/game/Game"
 
 interface SearchBarProps {
   setOpenSearch: (value: boolean) => void
-  games: {
-    id: string
-    name: string
-    summary: string
-    cover: string
-  }[]
   user: UserList[]
 }
 
-export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps) {
+export default function SearchBar({ user, setOpenSearch }: SearchBarProps) {
   const [open, setOpen] = React.useState(false)
   const [showAddModal, setShowAddModal] = React.useState(false);
+  const [searchInput, setSearchInput] = React.useState("")
+  const [loading, setLoading] = React.useState(false)
+  const [gameResults, setGameResults] = React.useState<GameData[] | null>(null)
   const navigate = useNavigate()
 
   React.useEffect(() => {
@@ -48,10 +48,30 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
   }, [])
 
   React.useEffect(() => {
-    if (open) {
-      setOpenSearch(true)
+    setOpenSearch(open)
+  }, [open, setOpenSearch])
+
+  async function getFuzzySearch() {
+    if (!searchInput.trim()) {
+      setGameResults(null)
+      return
     }
-  }, [open])
+
+    try {
+      setLoading(true)
+      const res = await instance.get("/games/search", {
+        params: {
+          q: searchInput,
+        },
+      });
+      console.log(res.data);
+      setGameResults(res.data);
+    } catch (error) {
+      console.error("Erro ao buscar jogos do fórum:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="flex flex-row items-center gap-4">
@@ -75,13 +95,68 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search for a game or user..." />
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        shouldFilter={false}
+        showCloseButton={false}
+      >
+        <CommandInput
+          placeholder="Search for a game or user..."
+          value={searchInput}
+          onValueChange={setSearchInput}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter") {
+              e.preventDefault()
+              getFuzzySearch()
+            }
+          }}
+        >
+          {searchInput ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                getFuzzySearch()
+              }}
+              disabled={loading || !searchInput.trim()}
+              className="text-xs px-2 py-1 rounded-md bg-purple-600 text-white disabled:opacity-50"
+            >
+              {loading ? "..." : "Buscar"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="text-muted-foreground/70 hover:text-foreground transition-colors"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </CommandInput>
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Games">
-            {
-              games.map((item) => {
+          {!searchInput.trim() && !gameResults && (
+            <div className="py-6 text-center text-sm text-muted-foreground">
+              Type something and press Enter to search.
+            </div>
+          )}
+
+          {loading && (
+            <div className="py-4 text-center text-sm text-muted-foreground">
+              Searching...
+            </div>
+          )}
+
+          {!loading && searchInput.trim() && (!gameResults || gameResults.length === 0) &&
+            user.filter((item) =>
+              item.username.toLowerCase().includes(searchInput.toLowerCase())
+            ).length === 0 && (
+            <CommandEmpty>No results found.</CommandEmpty>
+            )}
+
+          {!loading && gameResults && gameResults.length > 0 && (
+            <CommandGroup heading="Games">
+              {gameResults.map((item) => {
                 return (
                   <CommandItem onSelect={() => {
                     navigate(`/game/${item.id}`)
@@ -91,8 +166,8 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
                   >
                     <div className="flex flex-row items-center gap-4">
                       <Avatar>
-                        <AvatarImage src={item.cover.replace("{size}", "cover_big_2x")} alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={item.cover ? item.cover.replace("{size}", "cover_big_2x") : ""} alt="@shadcn" />
+                        <AvatarFallback>?</AvatarFallback>
                       </Avatar>
                       <div>
                         <h1>{item.name}</h1>
@@ -101,23 +176,30 @@ export default function SearchBar({ games, user, setOpenSearch }: SearchBarProps
                     </div>
                   </CommandItem>
                 )
-              })
-            }
-          </CommandGroup>
-          <CommandGroup heading="Users">
-            {
-              user.map((item) => {
-                return (
-                  <CommandItem onSelect={() => {
-                    navigate(`/account/${item.id}`)
-                    setOpen(false)
-                  }} key={item.id}>
-                    <span>{item.username}</span>
-                  </CommandItem>
+              })}
+            </CommandGroup>
+          )}
+
+          {!loading && user.filter((item) =>
+            item.username.toLowerCase().includes(searchInput.toLowerCase())
+          ).length > 0 && (
+            <CommandGroup heading="Users">
+              {user
+                .filter((item) =>
+                  item.username.toLowerCase().includes(searchInput.toLowerCase())
                 )
-              })
-            }
-          </CommandGroup>
+                .map((item) => {
+                  return (
+                    <CommandItem onSelect={() => {
+                      navigate(`/account/${item.id}`)
+                      setOpen(false)
+                    }} key={item.id}>
+                      <span>{item.username}</span>
+                    </CommandItem>
+                  )
+                })}
+            </CommandGroup>
+            )}
         </CommandList>
       </CommandDialog>
     </div>

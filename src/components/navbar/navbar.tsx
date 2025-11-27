@@ -36,12 +36,6 @@ export default function NavBar() {
     navigate("/")
   }
 
-  async function getGameList() {
-    const res = await instance.get("/games")
-
-    setGames(res.data)
-  }
-
   async function getUsersList() {
     const res = await instance.get("/user")
     console.log(res.data);
@@ -52,7 +46,6 @@ export default function NavBar() {
 
   useEffect(() => {
     if (search) {
-      getGameList()
       getUsersList()
     }
   },[search])
@@ -60,7 +53,7 @@ export default function NavBar() {
   return (
     <nav className="absolute right-4 left-4 top-4 flex flex-row items-center justify-between px-6 py-4 rounded-xl text-[#D9D9D9] z-50">
       <h1 onClick={() => navigate("/home")} className="font-bold text-xl cursor-pointer">{size.width <= 800 ? "SP" : "Save Point"}</h1>
-      <SearchBar user={users} games={games} setOpenSearch={(value) => setSearch(value)} />
+      <SearchBar user={users} setOpenSearch={(value) => setSearch(value)} />
       {
         size.width >= 800
         ? (

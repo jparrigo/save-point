@@ -19,7 +19,6 @@ export default function DialogAddGame({ data }: { data: GameData }) {
   const [open, setOpen] = useState(false)
   const [category, setCategory] = useState("")
   const [customLits, setCustomList] = useState<{ id: string, name: string }[]>([])
-  const [isInWish, setIsInWish] = useState(false)
   const user = getLocalUserData()
 
   async function addToList() {
@@ -29,9 +28,9 @@ export default function DialogAddGame({ data }: { data: GameData }) {
       listId: category,
       userId: user?.id
     }).then(() => {
+      toast.success("Game add to your list!")
       setOpen(false)
       setCategory("")
-      setIsInWish(true)
     }).catch((error) => {
       toast.info(error.response.data.message)
     })
@@ -51,7 +50,7 @@ export default function DialogAddGame({ data }: { data: GameData }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger disabled={isInWish}>
+      <DialogTrigger>
         <div className="bg-purple-800 outline outline-purple-600 text-purple-300 transition-all hover:shadow-lg hover:shadow-purple-500/30 hover:text-purple-100 cursor-pointer flex items-center rounded-md gap-2 h-9 px-3 py-2 text-sm">
           <Plus size={18} />
           Add to list
@@ -65,7 +64,7 @@ export default function DialogAddGame({ data }: { data: GameData }) {
         <div>
           <div className="flex flex-row items-center justify-between">
             <p>Library Category: </p>
-            <Select onValueChange={(value) => setCategory(value)}>
+            <Select disabled={customLits.length <= 0} onValueChange={(value) => setCategory(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
