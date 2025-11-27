@@ -54,76 +54,76 @@ export default function Register() {
     window.location.href = "http://localhost:3000/user/google";
   }
 
-    return (
-      <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
-        <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
-          <h1 className="text-5xl">Sign Up</h1>
-        </div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-90 flex flex-col gap-5">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="savepoint" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your public display name
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="savepoint@gmail.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="******" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <FormField
-                control={form.control}
-                name="repeat_password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Repeat Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="******" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <Button size="lg" variant="purple" type="submit">Get Started</Button>
-              <Button size="lg" variant='default' onClick={handleGoogleLogin}>
-                <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
-                Sign in with Google
-              </Button>
-              <p className="text-sm text-[#656565] text-center">Already have an account? <a href="/login" className="text-white">Login</a></p>
-            </form>
-          </Form>
+  return (
+    <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
+      <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
+        <h1 className="text-5xl">Sign Up</h1>
       </div>
-    )
-  }
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-90 flex flex-col gap-5">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="savepoint" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )} 
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="savepoint@gmail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} 
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} 
+            />
+            <FormField
+              control={form.control}
+              name="repeat_password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Repeat Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} 
+            />
+            <Button size="lg" variant="purple" type="submit">Get Started</Button>
+            <Button size="lg" variant='default' onClick={handleGoogleLogin}>
+              <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
+              Sign in with Google
+            </Button>
+            <p className="text-sm text-[#656565] text-center">Already have an account? <a href="/login" className="text-white">Login</a></p>
+          </form>
+        </Form>
+    </div>
+  )
+}

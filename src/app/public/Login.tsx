@@ -43,6 +43,10 @@ export default function Login() {
     })
   }
 
+  function handleGoogleLogin() {
+    window.location.href = "http://localhost:3000/user/google";
+  }
+
   return (
     <div className='h-screen bg-[url(/background.jpg)] bg-cover flex flex-col items-center justify-center text-[#D9D9D9]'>
       <div className="mb-8 flex flex-col items-center drop-shadow-2xl drop-shadow-[#444444]">
@@ -82,7 +86,7 @@ export default function Login() {
             )} 
           />
           <Button size="lg" variant="purple" type="submit">Sign In</Button>
-          <Button size="lg" variant='default'>
+          <Button size="lg" variant='default' onClick={handleGoogleLogin}>
             <img className="w-8" src="./google-logo.png" alt="Google Logo"/>
             Sign in with Google
           </Button>
