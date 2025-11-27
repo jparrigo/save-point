@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
+import { instance } from "../../lib/axios";
 
 interface Props {
   open: boolean;
@@ -7,9 +8,13 @@ interface Props {
 }
 
 interface GameData {
-  id: string;
-  igdbId: number;
-  name: string;
+  id: string
+  name: string
+  cover_url: string
+  alternatives: {
+    id: string
+    name: string
+  }[]
 }
 
 export default function DialogAddGameByImage({ open, onClose }: Props) {
@@ -17,24 +22,12 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [foundGame, setFoundGame] = useState<GameData | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const mockGame: GameData = {
-    id: "1",
-    igdbId: 101,
-    name: "The Legend of Zelda",
-  };
-
-  useEffect(() => {
-    if (open) {
-      startCamera()
-      setCameraActive(true)
-    } else {
-      stopCamera()
-    }
-  }, [open])
 
   const startCamera = async () => {
     try {
@@ -59,6 +52,15 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
       setCameraActive(false);
     }
   };
+
+  useEffect(() => {
+    if (open) {
+      startCamera();
+      setCameraActive(true);
+    } else {
+      stopCamera();
+    }
+  }, [open]);
 
   const stopCamera = () => {
     try {
@@ -98,6 +100,44 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
     }
   };
 
+  const handleSearch = async () => {
+    if (!selectedFile) return;
+
+    try {
+      setIsSearching(true);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      // TODO: ajuste a rota abaixo para a rota correta do seu backend
+      const response = await instance.post("/cover-matcher/search", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Adapte este parse ao formato real que o backend retorna
+      const match = response.data.match;
+      console.log(response.data);
+
+      const game: GameData = {
+        id: match.id?.toString() ?? "0",
+        cover_url: match.cover_url,
+        name: match.name ?? "Unknown game",
+        alternatives: response.data.alternatives
+      };
+
+      setFoundGame(game);
+      setStep(2);
+    } catch (err) {
+      console.error("Erro ao buscar jogo pela imagem:", err);
+      setError("Não foi possível identificar o jogo. Tente outra imagem.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     setSelectedFile(f);
@@ -111,6 +151,7 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
         setPreviewUrl(reader.result as string);
       };
       reader.readAsDataURL(f);
+
     } else {
       setPreviewUrl(null);
     }
@@ -142,7 +183,7 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
     <div className="fixed inset-0 bg-black/40 bg-opacity-50 flex justify-center items-center z-50">
       <div
         className={`relative flex flex-col items-center bg-[#141414] border border-[#343434] rounded-xl p-5 w-[600px] ${
-          step === 1 ? "h-[640px]" : "h-[500px]"
+          step === 1 ? "h-[640px]" : ""
         }`}
       >
         <div className="flex flex-row items-center justify-between w-full mb-8">
@@ -193,49 +234,57 @@ export default function DialogAddGameByImage({ open, onClose }: Props) {
               <canvas ref={canvasRef} className="hidden" />
             </div>
 
+            {error && (
+              <span className="w-full text-sm text-red-400 mb-2 text-center">
+                {error}
+              </span>
+            )}
+
             <div className="flex flex-row items-center justify-center gap-4">
               <Button variant="purple" className="w-full" disabled={!cameraActive} onClick={takePhoto}>Take photo</Button>
-              <Button className="w-full" disabled={!previewUrl} onClick={() => setStep(2)}>Search</Button>
+              <Button
+                className="w-full"
+                disabled={!previewUrl || !selectedFile || isSearching}
+                onClick={handleSearch}
+              >
+                {isSearching ? "Searching..." : "Search"}
+              </Button>
             </div>
           </>
         )}
 
         {step === 2 && (
-          <div className="flex flex-col flex-1 w-full">
-            <div className="flex flex-1 gap-5">
-              <div className="flex-1 flex justify-center items-center">
-                {previewUrl && <img src={previewUrl} alt="Imagem do usuário" className="w-4/5 rounded-lg" />}
-              </div>
+          <div className="flex flex-col w-full">
+            <div className="flex-1 flex flex-row items-center cursor-pointer hover:bg-[#202020] hover:border-[#444444] bg-[#191919] border border-[#343434] p-2 gap-4 rounded-xl">
+              <img src={foundGame?.cover_url} alt="Imagem do usuário" className="w-30 h-40 rounded-lg" />
+              <span className="font-bold text-lg">{foundGame?.name} <span className="font-normal text-white/60">({foundGame?.id})</span></span>
+            </div>
 
-              <div className="flex-1 flex flex-col items-start pt-2 text-white text-lg">
-                <span className="font-bold text-xl">{mockGame.name}</span>
-                <span className="text-sm text-gray-400">{mockGame.id}</span>
-                <span className="text-sm text-gray-400">{mockGame.igdbId}</span>
+            <div className="mt-6">
+              <h1 className="font-bold mb-2">Other options</h1>
+              <div className="flex flex-col gap-2">
+                {
+                  foundGame?.alternatives.map((item) => {
+                    return (
+                      <div key={item.id} className="flex-1 flex flex-row items-center cursor-pointer hover:bg-[#202020] hover:border-[#444444] bg-[#191919] border border-[#343434] p-2 gap-4 rounded-xl">
+                        <span className="font-bold text-md">{item.name} <span className="font-normal text-white/60">({item.id})</span></span>
+                      </div>
+                    )
+                  })
+                }
               </div>
             </div>
 
-            <div className="flex justify-between w-full mt-4">
-              <button
-                className="bg-red-500 text-white py-2 px-4 rounded-lg cursor-pointer"
+            <div className="flex mt-4">
+              <Button
+                variant="purple"
+                className="w-full"
                 onClick={() => {
                   setStep(1)
                   startCamera()
                   setCameraActive(true)
                 }}
-                type="button"
-              >
-                Cancelar
-              </button>
-              <button
-                className="bg-green-500 text-white py-2 px-4 rounded-lg cursor-pointer"
-                onClick={() => {
-                  console.log("Finalizar com imagem:", selectedFile);
-                  onClose();
-                }}
-                type="button"
-              >
-                Finalizar
-              </button>
+              >Return</Button>
             </div>
           </div>
         )}
