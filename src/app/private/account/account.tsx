@@ -3,15 +3,32 @@ import NavBar from "../../../components/navbar/navbar";
 import GameCard from "../../../components/gamecard/gamecardSquare";
 import { instance } from "../../../lib/axios";
 import { Button } from "../../../components/ui/button";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getLocalUserData } from "../../../lib/getLocalUserData";
 import ModalListOfFriends from "./modal/modal-list-of-friends";
 import Footer from "../../../components/footer/footer";
 import ModalEditUser from "./modal/modal-edit-user";
+import { ListGamesType } from "../library/Library";
+import { Skeleton } from "../../../components/ui/skeleton";
+
+type ReviewType = {
+  createdAt: string
+  id: string
+  rating: boolean
+  reviewText: string
+  updatedAt: string
+  user: {
+    username: string
+  },
+  game: {
+    name: string
+  }
+}
 
 export default function Account() {
   const { id } = useParams<{ id: string }>()
   const userLocalData = getLocalUserData()
+  const navigate = useNavigate()
   const [user, setUser] = useState({
     id: "",
     username: "",
@@ -19,24 +36,8 @@ export default function Account() {
     gamesCount: 0,
     friends: 100,
   });
-  const [reviews, setReviews] = useState<{
-    createdAt: string
-    id: string
-    rating: boolean
-    reviewText: string
-    updatedAt: string
-    user: {
-      username: string
-    },
-    game: {
-      name: string
-    }
-  }[]>([])
-  const [gameList, setGameList] = useState<{
-    id: string
-    title: string
-    img: string
-  }[]>([])
+  const [reviews, setReviews] = useState<ReviewType[] | null>(null)
+  const [gameList, setGameList] = useState<ListGamesType[] | null>(null)
 
   const [isFollow, setIsFollow] = useState(false)
   const [openModalListOfFriends, setOpenModalListOfFriends] = useState(false)
@@ -84,36 +85,35 @@ export default function Account() {
   }
 
   async function getUserReviews() {
-    await instance.get(`/reviews/user/${id}`)
-      .then((res) => {
-        console.log(res.data);
-        setReviews(res.data)
-      })
+    setReviews(null)
+
+    await instance.get(`/reviews/user/${id}`).then((res) => {
+      console.log(res.data);
+      setReviews(res.data)
+    })
   }
 
   async function getUserLibraryGames() {
-    const ret = await instance.get(`/wishlist/${id}`)
-    let newWishList: any = ret.data.map((item: any) => {
-      return {
-        id: item.game.id,
-        title: item.game.name,
-        img: item.game.cover.replace("{size}", "cover_big_2x")
-      }
-    })
+    setGameList(null)
 
-    setGameList(newWishList)
-    setUser(itens => ({ ...itens, gamesCount: newWishList.length, friends: 100 }))
+    const customList = await instance.get(`/custom-list/user/${id}`)
+    const customListWithItems: ListGamesType[] = customList.data
+
+    setGameList(customListWithItems)
+    setUser(itens => ({ ...itens, gamesCount: customListWithItems.length, friends: 100 }))
   }
 
   useEffect(() => {
-    getUserData()
-    getUserReviews()
-    getUserLibraryGames()
-    getIsFollowingUser()
+    if (id) {
+      getUserData()
+      getUserReviews()
+      getUserLibraryGames()
+      getIsFollowingUser()
+    }
   }, [id]);
 
   return (
-    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100 pt-30">
+    <main className="bg-[url(/default.png)] bg-cover min-h-screen text-slate-100 pt-30 items-center">
       <NavBar />
       <ModalListOfFriends
         open={openModalListOfFriends}
@@ -125,10 +125,10 @@ export default function Account() {
         callback={getUserData}
         user={user}
       />
-      <div className="flex flex-col items-center mx-50 bg-[#151515] border-[#252525] border rounded-2xl">
+      <div className="flex flex-col items-center mx-100 bg-[#151515] border-[#252525] border rounded-2xl">
 
         {/* Profile Header */}
-        <div className="bg-black/10 rounded-xl p-6 mb-10 w-full max-w-6xl flex flex-col md:flex-row items-center md:items-start gap-6">
+        <div className="bg-black/10 rounded-xl p-6 mb-10 w-full flex flex-col md:flex-row items-center md:items-start gap-6">
           <img
             src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg"
             alt="Profile"
@@ -139,8 +139,8 @@ export default function Account() {
             <h1 className="text-3xl font-semibold">{user.username}</h1>
             <p className="text-sm text-white/70">{user.email}</p>
             <p className="text-sm text-white/60 mt-6">
-              Number of games: <span className="text-white">{user.gamesCount}</span><br />
-              Friends: <span className="text-white">{user.friends}</span>
+              Number of libraries: <span className="text-white">{user.gamesCount}</span><br />
+              {/* Friends: <span className="text-white">{user.friends}</span> */}
             </p>
           </div>
           <Button onClick={() => setOpenModalListOfFriends(true)}>
@@ -158,42 +158,87 @@ export default function Account() {
         </div>
 
         {/* Popular Games */}
-        <div className="flex justify-center py-10 flex-col items-center px-4 w-full max-w-6xl">
-          <h1 className="text-3xl font-bold text-white w-full text-left pl-4 mb-4">My Library</h1>
-          <div className="w-full overflow-x-auto scrollbar-transparent">
-            <div className="flex gap-1 px-2">
-              {
-                gameList.length == 0
-                  ? "No games yet..."
-                  : null
-              }
-              {gameList.map((item, i) => (
-                <div key={i} className="flex-shrink-0 w-[200px]">
-                  <GameCard image={item.img} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* My Reviews Section */}
-        <div className="flex justify-center py-10 flex-col items-center px-4 w-full max-w-6xl">
-          <h1 className="text-3xl font-bold text-white w-full text-left pl-4 mb-4">My Reviews</h1>
-          <div className="w-full overflow-x-auto scrollbar-transparent">
-            <div className="flex gap-5 px-2 ">
-              {
-                reviews.length == 0
-                  ? "No reviews yet..."
-                  : null
-              }
-              {reviews.map((item, i) => (
-                <div key={i} className="flex-shrink-0 w-[200px]">
-                  <div className="bg-black/50 p-4 rounded-md">
-                    <h2 className="text-white text-lg font-semibold">{item.game.name}</h2>
-                    <p className="text-white text-sm mt-2">{item.reviewText}</p>
+        <h1 className="bg-purple-800 px-4 py-2 rounded-md">My Library</h1>
+        {
+          !gameList ? (
+            <div className="flex justify-center py-10 flex-col gap-4 px-4 w-full">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div className="pl-8" key={i}>
+                  <Skeleton className="h-7 w-40 mb-4" />
+                  <div className="w-full overflow-x-auto scrollbar-transparent">
+                    <div className="flex gap-1 px-2">
+                      {Array.from({ length: 4 }).map((_, j) => (
+                        <div key={j} className="flex-shrink-0 w-40">
+                          <Skeleton className="w-40 h-40 rounded-md" />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="flex justify-center py-10 flex-col gap-4 px-4 w-full">
+              {
+                  gameList.length === 0
+                    ? <p className="text-center text-white/60 mt-2">No libraries yet...</p>
+                    : gameList.map((item, i) => {
+                      return (
+                        <div className="pl-8" key={i}>
+                          <h1 className="text-2xl font-bold text-white w-full text-left mb-4">{item.name}</h1>
+                          <div className="w-full overflow-x-auto scrollbar-transparent">
+                            <div className="flex gap-1 px-2">
+                              {item.games.map((game) => {
+                                return (
+                                  <div onClick={() => navigate(`/game/${game.id}`)} key={game.id} className="flex-shrink-0 w-[200px]">
+                                    <GameCard image={game.cover.replace("{size}", "cover_big_2x")} />
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+              }
+            </div>
+          )
+        }
+
+        {/* My Reviews Section */}
+        <div className="flex justify-center py-10 flex-col items-center px-4 gap-8 w-full">
+          <h1 className="bg-purple-800 px-4 py-2 rounded-md">My Reviews</h1>
+          <div className="w-full overflow-x-auto scrollbar-transparent">
+            <div className="flex gap-5 px-2 ">
+              {
+                !reviews
+                  ? Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="flex-shrink-0 w-[200px]">
+                      <div className="bg-black/20 p-4 rounded-md">
+                        <Skeleton className="h-5 w-32 mb-2" />
+                        <Skeleton className="h-4 w-full mb-1" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
+                    </div>
+                  ))
+                  : (
+                    <>
+                      {
+                        reviews.length == 0
+                          ? "No reviews yet..."
+                          : null
+                      }
+                      {reviews.map((item, i) => (
+                        <div key={i} className="flex-shrink-0 w-[200px]">
+                          <div className="bg-black/20 p-4 rounded-md">
+                            <h2 className="text-white text-lg font-semibold">{item.game.name}</h2>
+                            <p className="text-white text-sm mt-2">{item.reviewText}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )
+              }
             </div>
           </div>
         </div>

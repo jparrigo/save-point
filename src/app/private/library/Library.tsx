@@ -55,7 +55,6 @@ export default function Library() {
   }
 
   async function getGamesWishList() {
-    // força mostrar o skeleton enquanto recarrega
     setList(null)
 
     try {
@@ -66,7 +65,6 @@ export default function Library() {
       setList(customListWithItems)
     } catch (error) {
       console.error("Error to load custom lists:", error)
-      // em caso de erro, evita skeleton infinito
       setList([])
       toast.error("Error to load your libraries.")
     }

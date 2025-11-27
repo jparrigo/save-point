@@ -143,9 +143,6 @@ export default function Game() {
               <h1 className="text-4xl font-semibold mb-6 max-md:text-xl">{game.name}</h1>
               <DialogAddGame data={game} />
             </div>
-            <p className="text-lg font-medium mb-2">
-              <span className="opacity-70">Score:</span> 0
-            </p>
 
             <p className="opacity-70 mb-1">About:</p>
             <p className="leading-relaxed text-sm sm:text-base">{game.summary}</p>
