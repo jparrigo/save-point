@@ -157,7 +157,6 @@ export default function Home() {
                       <img className="w-16 h-20" src={item.img} alt="" />
                       <div className="flex flex-col">
                         <h1>{item.title}</h1>
-                        <p>Oct 6</p>
                       </div>
                     </div>
                   )
@@ -183,7 +182,6 @@ export default function Home() {
                       <img className="w-16 h-20" src={item.img} alt="" />
                       <div className="flex flex-col">
                         <h1>{item.title}</h1>
-                        <p>Oct 6</p>
                       </div>
                     </div>
                   )
@@ -209,7 +207,6 @@ export default function Home() {
                       <img className="w-16 h-20" src={item.img} alt="" />
                       <div className="flex flex-col">
                         <h1>{item.title}</h1>
-                        <p>Avg 5.0</p>
                       </div>
                     </div>
                   )

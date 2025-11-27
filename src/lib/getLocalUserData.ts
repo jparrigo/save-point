@@ -5,6 +5,7 @@ export function getLocalUserData() {
       id: string
       username: string
       email: string
+      profilePictureUrl: string
     } = JSON.parse(localData)
 
     return userData

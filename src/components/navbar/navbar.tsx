@@ -66,16 +66,16 @@ export default function NavBar() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className="cursor-pointer">
-                    <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" />
-                  <AvatarFallback>SP</AvatarFallback>
+                    <AvatarImage src={user?.profilePictureUrl} alt="savepoint" />
+                    <AvatarFallback className="dark">SP</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="dark">
                 <DropdownMenuLabel>
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" alt="shadcn" />
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                        <AvatarImage src={user?.profilePictureUrl} alt="savepoint" />
+                        <AvatarFallback className="rounded-lg">SP</AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">{user?.username}</span>
@@ -114,7 +114,7 @@ export default function NavBar() {
               <section className="flex flex-col gap-6">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src="https://republicadg.com.br/wp-content/uploads/2022/01/Os-10-herois-mais-poderosos-dos-jogos.jpg" alt="shadcn" />
+                      <AvatarImage src={user?.profilePictureUrl} alt="savepoint" />
                     <AvatarFallback className="rounded-lg">SP</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
