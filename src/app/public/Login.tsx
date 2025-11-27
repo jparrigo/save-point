@@ -44,6 +44,12 @@ export default function Login() {
   }
 
   function handleGoogleLogin() {
+    const userData = {
+        id: "google",
+        username: "google",
+        email: "google"
+      };
+    localStorage.setItem("@savepoint/login", JSON.stringify(userData));
     window.location.href = "http://localhost:3000/user/google";
   }
 
